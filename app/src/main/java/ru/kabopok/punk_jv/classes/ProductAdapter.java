@@ -57,7 +57,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         Product product = productList.get(position);
         holder.row_name.setText(product.getProductName());
         holder.row_info.setText(product.getProductInfo());
-        Picasso.with(context).load("https://firebasestorage.googleapis.com/v0/b/punkjv-de227.appspot.com/o/images%2F5becc6bc-429a-4e65-b5c3-116aea1775cd?alt=media&token=c514a4b6-0852-450c-a005-9b992df634ba").into(holder.row_image);
+        Picasso.with(context).load(product.getURL()).into(holder.row_image);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -8,7 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,8 +96,25 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setData() {
-        productList.add(new Product("1","1","1","1","1"));
-        productList.add(new Product("1","1","1","1","1"));
-        productList.add(new Product("1","1","1","1","1"));
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long count_long = dataSnapshot.child("Products").getChildrenCount();
+                for(int i =0; i < count_long; ++i) {
+                    if (dataSnapshot.child("Products").child(String.valueOf(i)).exists()) {
+                        Product product = dataSnapshot.child("Products").child(String.valueOf(i)).getValue(Product.class);
+                        productList.add(product);
+                    }
+                }
+                prepareAdapter();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

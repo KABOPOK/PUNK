@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText numberData;
     private EditText passwordData;
     private Button registration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
