@@ -15,73 +15,87 @@ import java.util.List;
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.ProductAdapter;
+import ru.kabopok.punk_jv.classes.User;
 import ru.kabopok.punk_jv.current.Online;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class MainActivity extends AppCompatActivity {
-
-    RecyclerView rvProducts;
-    ProductAdapter productAdapter;
-    SearchView searchView;
-    List<Product> productList = new ArrayList<>();
-
+    private Button inputButton;
+    private EditText numberData;
+    private EditText passwordData;
+    private Button registration;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        rvProducts = findViewById(R.id.rvProducts);
-        searchView = findViewById(R.id.searchView);
-        searchView.clearFocus();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//        Intent regIntentA = new Intent(MainActivity.this, HomeActivity.class);
+        //startActivity(regIntentA);
+        //Set Data
+        {
+            registration = (Button) findViewById(R.id.register_button);
+            numberData = (EditText) findViewById(R.id.input_text_number);
+            passwordData = (EditText) findViewById(R.id.input_text_password);
+            inputButton = (Button) findViewById(R.id.in_button);
+        }
+        registration.setOnClickListener((v)->{
+            Intent regIntent = new Intent(MainActivity.this, RegistrationActivity.class);
+            startActivity(regIntent);
+        });
+        inputButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                showFilterList(newText);
-                return false;
+            public void onClick(View v) {
+                InToApp();
             }
         });
-        setData();
-        prepareRV();
     }
 
-    private void showFilterList(String newText) {
-        List<Product> filteredList = new ArrayList<>();
-        for (Product product : productList) {
-            if (product.getProductName().toLowerCase().contains(newText)) {
-                filteredList.add(product);
+    private void InToApp() {
+        String number = numberData.getText().toString();
+        String password = passwordData.getText().toString();
+        chekInBase(number, password);
+    }
+
+    private void chekInBase(String number, String password) {
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("Users").child(number).exists()) {
+
+                    User user = dataSnapshot.child("Users").child(number).getValue(User.class);
+                    if(user.getPassword().equals(password)){
+                        Online.setCurrentUser(user);
+                        Toast.makeText(MainActivity.this, " вечер в хату ", Toast.LENGTH_LONG).show();
+                        Intent regIntent = new Intent(MainActivity.this, HomeActivity.class);
+                        startActivity(regIntent);
+                    }
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "такой попки я ещё не видал -> занеси свою попку в мою базу " + number, Toast.LENGTH_LONG).show();
+                    Intent regIntent = new Intent(MainActivity.this, RegistrationActivity.class);
+                    startActivity(regIntent);
+                }
             }
-        }
 
-        if (filteredList.isEmpty()) {
-            Toast.makeText(this, "раскупили такие", Toast.LENGTH_LONG).show();
-        } else {
-            productAdapter.setProductList(filteredList);
-        }
-    }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-    private void prepareRV() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        rvProducts.setLayoutManager(linearLayoutManager);
-        prepareAdapter();
-    }
-
-    private void prepareAdapter() {
-        productAdapter = new ProductAdapter(productList, this, this::selectedProduct);
-        rvProducts.setAdapter(productAdapter);
-    }
-
-    private void selectedProduct(Product product) {
-        Online.setCurrentProduct(product);
-        Intent productIntent = new Intent(MainActivity.this, ProductActivity.class);
-        startActivity(productIntent);
-    }
-
-    private void setData() {
-        productList.add(new Product("1","1","1","1","1"));
-        productList.add(new Product("1","1","1","1","1"));
-        productList.add(new Product("1","1","1","1","1"));
+            }
+        });
     }
 }
