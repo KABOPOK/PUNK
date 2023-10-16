@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,12 +24,15 @@ public class HomeActivity extends AppCompatActivity {
     ProductAdapter productAdapter;
     SearchView searchView;
     List<Product> productList = new ArrayList<>();
+
+    Button profileButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         rvProducts = findViewById(R.id.rvProducts);
         searchView = findViewById(R.id.searchView);
+        profileButton = findViewById(R.id.profile_Button);
         searchView.clearFocus();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -41,6 +45,11 @@ public class HomeActivity extends AppCompatActivity {
                 showFilterList(newText);
                 return false;
             }
+        });
+
+        profileButton.setOnClickListener((v)->{
+            Intent profileIntent = new Intent(HomeActivity.this, ProfileActivity.class);
+            startActivity(profileIntent);
         });
         setData();
         prepareRV();
