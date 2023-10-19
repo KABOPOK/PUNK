@@ -118,6 +118,8 @@ public class PublishProductActivity extends AppCompatActivity {
                         String imgURL = imgUrl.toString();
                         String user = Online.getCurrentUser().getNumber();
                         sendToBase(user,name,price,info,imgURL);
+                        Intent toHomeIntent = new Intent(PublishProductActivity.this, HomeActivity.class);
+                        startActivity(toHomeIntent);
                     }
                 });
                 result.addOnFailureListener(new OnFailureListener() {
