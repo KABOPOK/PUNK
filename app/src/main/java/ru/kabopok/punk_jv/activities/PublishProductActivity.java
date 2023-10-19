@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -33,6 +35,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -89,7 +93,8 @@ public class PublishProductActivity extends AppCompatActivity {
         });
 
         PushProduct.setOnClickListener(view -> {
-            uploadImage(uriOfImg);
+            //uploadImage(uriOfImg);
+            uploadImgWithCompress();
         });
     }
 
@@ -101,6 +106,42 @@ public class PublishProductActivity extends AppCompatActivity {
         String user = Online.getCurrentUser().getNumber();
         sendToBase(user,name,price,info,imgURL);
     }
+
+    private void uploadImgWithCompress(){
+        byte[] bytes = new byte[0];
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriOfImg);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 40,byteArrayOutputStream);
+            bytes = byteArrayOutputStream.toByteArray();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+        ref.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(PublishProductActivity.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
+                Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        imgUrl = uri.toString();
+                        String name = productTitle.getText().toString();
+                        String price = productPrice.getText().toString();
+                        String info = productInfo.getText().toString();
+                        String imgURL = imgUrl.toString();
+                        String user = Online.getCurrentUser().getNumber();
+                        sendToBase(user,name,price,info,imgURL);
+                        Intent toHomeIntent = new Intent(PublishProductActivity.this, HomeActivity.class);
+                        startActivity(toHomeIntent);
+                    }
+                });
+            }
+        });
+    }
+
     private void uploadImage(Uri file) {
         StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
         ref.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

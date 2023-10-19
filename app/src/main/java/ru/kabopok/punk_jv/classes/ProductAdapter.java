@@ -56,6 +56,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
     public void onBindViewHolder(@NonNull ProductAdapterVh holder, int position) {
         Product product = productList.get(position);
         holder.row_name.setText(product.getProductName());
+        holder.row_price.setText(product.getProductPrice());
         holder.row_info.setText(product.getProductInfo());
         Picasso.with(context).load(product.getURL()).into(holder.row_image);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -75,11 +76,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         private ImageView row_image;
         private TextView row_name;
         private TextView row_info;
+        private TextView row_price;
         public ProductAdapterVh(@NonNull View itemView) {
             super(itemView);
             row_image = itemView.findViewById(R.id.row_image_ImageView);
             row_name = itemView.findViewById(R.id.row_productName_TextView);
             row_info = itemView.findViewById(R.id.row_productInfo_TextView);
+            row_price = itemView.findViewById(R.id.row_productPrice_TextView);
         }
     }
 }
