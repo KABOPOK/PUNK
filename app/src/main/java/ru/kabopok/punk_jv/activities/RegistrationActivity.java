@@ -3,10 +3,12 @@ package ru.kabopok.punk_jv.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,8 +23,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 
 import ru.kabopok.punk_jv.R;
+import ru.kabopok.punk_jv.classes.LoadingBar;
 
 public class RegistrationActivity extends AppCompatActivity {
+
+    final LoadingBar loadingBar = new LoadingBar(RegistrationActivity.this);
+    private CheckBox checkBox;
     private Button createUser;
     private EditText nameData;
     private EditText genderData;
@@ -37,11 +43,24 @@ public class RegistrationActivity extends AppCompatActivity {
         genderData = (EditText) findViewById(R.id.create_gender);
         numberData = (EditText) findViewById(R.id.create_login);
         passwordData = (EditText) findViewById(R.id.create_password);
+        checkBox = findViewById(R.id.checkRegistration_CheckBox);
 
+        //final LoadingBar loadingBar = new LoadingBar(RegistrationActivity.this);
         createUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAccount();
+                if(checkBox.isActivated()){
+                    loadingBar.show();
+                    //1createAccount();
+                }
+                else{
+                    Exception Exception = null;
+                    try {
+                        throw Exception;
+                    } catch (java.lang.Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         });
     }
@@ -84,6 +103,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                         Intent regIntent = new Intent(RegistrationActivity.this, MainActivity.class);
                                         startActivity(regIntent);
                                     }
+                                    loadingBar.dismiss();
                                 }
                             });
                 }
@@ -91,6 +111,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     Toast.makeText(RegistrationActivity.this, "Already registered -> " + number, Toast.LENGTH_LONG).show();
                     Intent regIntent = new Intent(RegistrationActivity.this, MainActivity.class);
                     startActivity(regIntent);
+                    loadingBar.dismiss();
                 }
             }
 

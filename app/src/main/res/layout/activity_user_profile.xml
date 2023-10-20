@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ProductActivity">
+
+    <ImageView
+        android:id="@+id/userProfilePhoto_ImageView"
+        android:layout_width="366dp"
+        android:layout_height="311dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nameOfUser_TextView"
+        android:layout_width="276dp"
+        android:layout_height="53dp"
+        android:textAlignment="center"
+        android:layout_marginTop="28dp"
+        android:textSize="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userProfilePhoto_ImageView" />
+
+    <TextView
+        android:id="@+id/genderOfUser_TextView"
+        android:layout_width="276dp"
+        android:textAlignment="center"
+        android:layout_height="53dp"
+        android:layout_marginTop="28dp"
+        android:textSize="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameOfUser_TextView" />
+
+
+    <TextView
+        android:id="@+id/numberOfUser_TextView"
+        android:layout_width="276dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="28dp"
+        android:textAlignment="center"
+        android:textSize="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/genderOfUser_TextView" />
+
+    <Button
+        android:id="@+id/toProfileUser_Button"
+        android:layout_width="342dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="20dp"
+        android:text="вау, хочу подкатить"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/numberOfUser_TextView"
+        app:layout_constraintVertical_bias="0.605" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

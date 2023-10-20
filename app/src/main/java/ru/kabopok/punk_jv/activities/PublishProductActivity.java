@@ -43,10 +43,12 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import ru.kabopok.punk_jv.R;
+import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.current.Online;
 
 public class PublishProductActivity extends AppCompatActivity {
 
+    final LoadingBar loadingBar = new LoadingBar(PublishProductActivity.this);
     StorageReference storageReference;
     private EditText productTitle;
     private EditText productPrice;
@@ -94,6 +96,7 @@ public class PublishProductActivity extends AppCompatActivity {
 
         PushProduct.setOnClickListener(view -> {
             //uploadImage(uriOfImg);
+            loadingBar.show();
             uploadImgWithCompress();
         });
     }
@@ -127,6 +130,7 @@ public class PublishProductActivity extends AppCompatActivity {
                 result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        loadingBar.dismiss();
                         imgUrl = uri.toString();
                         String name = productTitle.getText().toString();
                         String price = productPrice.getText().toString();

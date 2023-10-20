@@ -2,6 +2,7 @@ package ru.kabopok.punk_jv.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import ru.kabopok.punk_jv.R;
+import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.current.Online;
 
@@ -36,5 +38,9 @@ public class ProductActivity extends AppCompatActivity {
         nameOfUser.setText(currentProduct.getProductName());
         priceOfProduct.setText(currentProduct.getProductPrice());
         productInfo.setText(currentProduct.getProductInfo());
+        toUserProfileButton.setOnClickListener(v -> {
+            Intent userIntent = new Intent(ProductActivity.this, UserProfileActivity.class);
+            startActivity(userIntent);
+        });
     }
 }
