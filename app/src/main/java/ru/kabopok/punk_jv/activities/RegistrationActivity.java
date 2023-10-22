@@ -1,57 +1,102 @@
 package ru.kabopok.punk_jv.activities;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.classes.LoadingBar;
+import ru.kabopok.punk_jv.current.Online;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     final LoadingBar loadingBar = new LoadingBar(RegistrationActivity.this);
     private CheckBox checkBox;
+    private ImageView photoUser;
+    private Uri photoUserUri;
     private Button createUser;
     private EditText nameData;
+    StorageReference storageReference;
+    private StorageReference StoreRef;
     private EditText genderData;
     private EditText numberData;
     private EditText passwordData;
+
+    public final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == RESULT_OK) {
+                if (result.getData() != null) {
+                    photoUserUri = result.getData().getData();
+                    Glide.with(getApplicationContext()).load(photoUserUri).into(photoUser);
+                }
+            } else {
+                Toast.makeText(RegistrationActivity.this, "Выбири свою лучшую фоточку", Toast.LENGTH_SHORT).show();
+            }
+        }
+    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        storageReference = FirebaseStorage.getInstance().getReference();
+        StoreRef = FirebaseStorage.getInstance().getReference("Image");
         createUser = (Button) findViewById(R.id.create_new_user_button);
         nameData = (EditText) findViewById(R.id.create_name);
         genderData = (EditText) findViewById(R.id.create_gender);
         numberData = (EditText) findViewById(R.id.create_login);
         passwordData = (EditText) findViewById(R.id.create_password);
         checkBox = findViewById(R.id.checkRegistration_CheckBox);
+        photoUser = findViewById(R.id.registrationUserPhoto_ImageView);
 
-        //final LoadingBar loadingBar = new LoadingBar(RegistrationActivity.this);
+        photoUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                activityResultLauncher.launch(intent);
+            }
+        });
         createUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkBox.isActivated()){
+                if(checkBox.isChecked()){
                     loadingBar.show();
-                    //1createAccount();
+                    uploadImgWithCompress();
                 }
                 else{
                     Exception Exception = null;
@@ -65,6 +110,41 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
 
+    private void uploadImgWithCompress(){
+        byte[] bytes = new byte[0];
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUserUri);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 40,byteArrayOutputStream);
+            bytes = byteArrayOutputStream.toByteArray();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+        ref.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(RegistrationActivity.this, "красивая девушка!!", Toast.LENGTH_SHORT).show();
+                Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        loadingBar.dismiss();
+                        String imgUrl = uri.toString();
+                        String name = nameData.getText().toString();
+                        String gender = genderData.getText().toString();
+                        String number = numberData.getText().toString();
+                        String password = passwordData.getText().toString();
+                        sendToBase(name, gender, number, password, imgUrl);
+                        Intent toHomeIntent = new Intent(RegistrationActivity.this, HomeActivity.class);
+                        startActivity(toHomeIntent);
+                    }
+                });
+            }
+        });
+    }
+
     private void createAccount() {
         String name = nameData.getText().toString();
         String gender = genderData.getText().toString();
@@ -73,10 +153,10 @@ public class RegistrationActivity extends AppCompatActivity {
         //check correct of data
         //..
         //end
-        sendToBase(name, gender, number, password);
+       // sendToBase(name, gender, number, password);
     }
 
-    private void sendToBase(String name, String gender, String number, String password) {
+    private void sendToBase(String name, String gender, String number, String password, String imgUrl) {
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -89,6 +169,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     userHashMap.put("number",number);
                     userHashMap.put("gender",gender);
                     userHashMap.put("password",password);
+                    userHashMap.put("photoUserUrl", imgUrl);
                     rootRef.child("Users").child(number).updateChildren(userHashMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

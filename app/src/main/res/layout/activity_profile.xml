@@ -6,14 +6,56 @@
     android:layout_height="match_parent"
     tools:context=".activities.ProfileActivity">
 
-    <TextView
-        android:id="@+id/profileUsername_TextView"
-        android:layout_width="408dp"
-        android:layout_height="130dp"
+    <ImageView
+        android:id="@+id/userMainProfilePhoto_ImageView"
+        android:layout_width="345dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:textSize="40dp"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/userProfileGender_TextView"
+        android:layout_width="164dp"
+        android:layout_height="73dp"
+        android:layout_marginStart="16dp"
+
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileUsername_TextView" />
+
+    <TextView
+        android:id="@+id/userProfilePassword_TextView"
+        android:layout_width="164dp"
+        android:layout_height="73dp"
+        android:layout_marginTop="20dp"
+
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileUsername_TextView" />
+
+    <TextView
+        android:id="@+id/userProfileNumber_TextView"
+        android:layout_width="402dp"
+        android:layout_height="82dp"
+        android:layout_marginTop="112dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileUsername_TextView" />
+
+    <TextView
+        android:id="@+id/profileUsername_TextView"
+        android:layout_width="379dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="16dp"
+        android:textSize="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userMainProfilePhoto_ImageView" />
 
     <Button
         android:id="@+id/profilePushProduct_Button"
@@ -23,5 +65,6 @@
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileNumber_TextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

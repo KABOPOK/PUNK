@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Intent regIntentA = new Intent(MainActivity.this, HomeActivity.class);
-        //startActivity(regIntentA);
         //Set Data
         {
             registration = (Button) findViewById(R.id.register_button);

@@ -1,6 +1,7 @@
 package ru.kabopok.punk_jv.classes;
 
 public class User {
+    private String photoUserUrl;
     private String name;
     private String gender;
     private String number;
@@ -10,17 +11,22 @@ public class User {
         gender =null;
         number =null;
         password =null;
+        photoUserUrl =null;
     }
-    public User(String name, String gender, String number, String password) {
+
+
+    public User(String name, String gender, String number, String password, String photoUserUrl) {
         this.name = name;
         this.gender = gender;
         this.number = number;
         this.password = password;
+        this.photoUserUrl = photoUserUrl;
     }
 
     public String getPassword() {
         return password;
     }
+    public String getPhotoUserUrl() { return photoUserUrl; }
 
     public void setPassword(String password) {
         this.password = password;
@@ -41,6 +47,8 @@ public class User {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    public void setPhotoUserUrl(String photoUserUrl) {this.photoUserUrl = photoUserUrl;}
 
     public String getName() {
         return name;
