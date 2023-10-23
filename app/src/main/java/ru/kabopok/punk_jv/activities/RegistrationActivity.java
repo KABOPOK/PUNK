@@ -163,8 +163,9 @@ public class RegistrationActivity extends AppCompatActivity {
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                long count = dataSnapshot.child("Users").getChildrenCount();
                 if(!dataSnapshot.child("Users").child(number).exists()){
-                    HashMap<String, Object> userHashMap= new HashMap<>();
+                    HashMap<String, Object> userHashMap = new HashMap<>();
                     userHashMap.put("name",name);
                     userHashMap.put("number",number);
                     userHashMap.put("gender",gender);

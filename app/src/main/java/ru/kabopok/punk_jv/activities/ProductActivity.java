@@ -34,10 +34,10 @@ public class ProductActivity extends AppCompatActivity {
         toUserProfileButton = findViewById(R.id.toProfileUser_Button);
 
         Product currentProduct = Online.getCurrentProduct();
-        Picasso.with(this).load(currentProduct.getURL()).into(photoOfProduct);
         nameOfUser.setText(currentProduct.getProductName());
         priceOfProduct.setText(currentProduct.getProductPrice());
         productInfo.setText(currentProduct.getProductInfo());
+        Picasso.with(this).load(currentProduct.getURL()).into(photoOfProduct);
         toUserProfileButton.setOnClickListener(v -> {
             Intent userIntent = new Intent(ProductActivity.this, UserProfileActivity.class);
             startActivity(userIntent);

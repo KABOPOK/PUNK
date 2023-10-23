@@ -18,9 +18,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     ImageView userPhoto;
     TextView userGender;
-
     TextView userPassword;
-    TextView usesrNumber;
+    TextView userNumber;
     TextView name;
     Button pushProductButton;
 
@@ -34,13 +33,13 @@ public class ProfileActivity extends AppCompatActivity {
         userPhoto = findViewById(R.id.userMainProfilePhoto_ImageView);
         userGender = findViewById(R.id.userProfileGender_TextView);
         userPassword = findViewById(R.id.userProfilePassword_TextView);
-        usesrNumber = findViewById(R.id.userProfileNumber_TextView);
+        userNumber = findViewById(R.id.userProfileNumber_TextView);
 
 
         name.setText(currentUser.getName());
         userGender.setText("Я" + currentUser.getGender());
         userPassword.setText(currentUser.getPassword());
-        usesrNumber.setText(currentUser.getNumber());
+        userNumber.setText(currentUser.getNumber());
         pushProductButton.setOnClickListener((v)->{
             Intent profileIntent = new Intent(ProfileActivity.this, PublishProductActivity.class);
             startActivity(profileIntent);

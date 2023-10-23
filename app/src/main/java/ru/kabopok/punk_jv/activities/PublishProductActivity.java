@@ -44,6 +44,7 @@ import java.util.UUID;
 
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.classes.LoadingBar;
+import ru.kabopok.punk_jv.classes.User;
 import ru.kabopok.punk_jv.current.Online;
 
 public class PublishProductActivity extends AppCompatActivity {
@@ -58,6 +59,8 @@ public class PublishProductActivity extends AppCompatActivity {
     private ImageView productImage;
     private Uri uriOfImg;
     private String imgUrl;
+
+    private User currentUser = Online.getCurrentUser();
     public final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
@@ -202,14 +205,15 @@ public class PublishProductActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long count_long = dataSnapshot.child("Products").getChildrenCount();
                 String count = String.valueOf(count_long);
-                if(!dataSnapshot.child("Products").child(count).exists()){
+                UUID uniqueKey = UUID.randomUUID();
+                if(!dataSnapshot.child("Products").child(String.valueOf(uniqueKey)).exists()){
                     HashMap<String, Object> userHashMap= new HashMap<>();
                     userHashMap.put("productName",productName);
                     userHashMap.put("productPrice",productPrice);
                     userHashMap.put("productInfo",productInfo);
                     userHashMap.put("URL",URL);
                     userHashMap.put("productOwner",Online.getCurrentUser().getNumber());
-                    rootRef.child("Products").child(count).updateChildren(userHashMap)
+                    rootRef.child("Products").child(String.valueOf(uniqueKey)).updateChildren(userHashMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -225,6 +229,9 @@ public class PublishProductActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+                    HashMap<String, Object> currentProductName = new HashMap<>();
+                    currentProductName.put(String.valueOf(uniqueKey),String.valueOf(uniqueKey));
+                    rootRef.child("Users").child(currentUser.getNumber()).child("UserProducts").updateChildren(currentProductName);
                 }
                 else{
 //                    Toast.makeText(RegistrationActivity.this, "Already registered -> " + number, Toast.LENGTH_LONG).show();

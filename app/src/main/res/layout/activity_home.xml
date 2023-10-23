@@ -21,7 +21,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvProducts"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="660dp"
         android:background="#EAE9E6"
         android:layout_marginTop="68dp"
         app:layout_constraintEnd_toEndOf="parent"

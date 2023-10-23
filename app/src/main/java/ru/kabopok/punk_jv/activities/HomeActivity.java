@@ -98,15 +98,19 @@ public class HomeActivity extends AppCompatActivity {
     private void setData() {
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        rootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                long count_long = dataSnapshot.child("Products").getChildrenCount();
-                for(int i =0; i < count_long; ++i) {
-                    if (dataSnapshot.child("Products").child(String.valueOf(i)).exists()) {
-                        Product product = dataSnapshot.child("Products").child(String.valueOf(i)).getValue(Product.class);
-                        productList.add(product);
-                    }
+//                long count_long = dataSnapshot.child("Products").getChildrenCount();
+//                for(int i =0; i < count_long; ++i) {
+//                    if (dataSnapshot.child("Products").child(String.valueOf(i)).exists()) {
+//                        Product product = dataSnapshot.child("Products").child(String.valueOf(i)).getValue(Product.class);
+//                        productList.add(product);
+//                    }
+//                }
+                for (DataSnapshot postSnapshot: dataSnapshot.child("Products").getChildren()) {
+                    Product product = postSnapshot.getValue(Product.class);
+                    productList.add(product);
                 }
                 prepareAdapter();
             }

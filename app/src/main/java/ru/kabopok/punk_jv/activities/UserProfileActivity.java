@@ -27,6 +27,7 @@ public class UserProfileActivity extends AppCompatActivity {
     TextView userGender;
     TextView userNumber;
 
+    User currentUser;
     Product currentProduct = Online.getCurrentProduct();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +43,15 @@ public class UserProfileActivity extends AppCompatActivity {
     private void getUserdata(String number) {
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
-        final User[] user = new User[1];
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child("Users").child(number).exists()) {
-                    user[0] = dataSnapshot.child("Users").child(number).getValue(User.class);
-                    userName.setText(user[0].getName());
-                    userGender.setText(user[0].getGender());
-                    userNumber.setText(user[0].getNumber());
+                    currentUser = dataSnapshot.child("Users").child(number).getValue(User.class);
+                    userName.setText(currentUser.getName());
+                    userGender.setText(currentUser.getGender());
+                    userNumber.setText(currentUser.getNumber());
+                    setImg();
                     Toast.makeText(UserProfileActivity.this, "что за тигр этот лев?!", Toast.LENGTH_LONG).show();
                 }
                 else{
@@ -65,6 +66,11 @@ public class UserProfileActivity extends AppCompatActivity {
 
             }
         });
-        Picasso.with(this).load(user[0].getPhotoUserUrl()).into(userPhoto);
+    }
+
+    private void setImg() {
+        if(currentUser.getPhotoUserUrl()!=null){
+            Picasso.with(this).load(currentUser.getPhotoUserUrl()).into(userPhoto);
+        }
     }
 }
