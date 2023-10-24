@@ -22,6 +22,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView userNumber;
     TextView name;
     Button pushProductButton;
+    Button userProductsButton;
 
     User currentUser = Online.getCurrentUser();
     @Override
@@ -30,6 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         name = findViewById(R.id.profileUsername_TextView);
         pushProductButton = findViewById(R.id.profilePushProduct_Button);
+        userProductsButton = findViewById(R.id.userProducts_Button);
         userPhoto = findViewById(R.id.userMainProfilePhoto_ImageView);
         userGender = findViewById(R.id.userProfileGender_TextView);
         userPassword = findViewById(R.id.userProfilePassword_TextView);
@@ -43,6 +45,10 @@ public class ProfileActivity extends AppCompatActivity {
         pushProductButton.setOnClickListener((v)->{
             Intent profileIntent = new Intent(ProfileActivity.this, PublishProductActivity.class);
             startActivity(profileIntent);
+        });
+        userProductsButton.setOnClickListener((v)->{
+            Intent userProductsIntent = new Intent(ProfileActivity.this, UserProductsActivity.class);
+            startActivity(userProductsIntent);
         });
 
         Picasso.with(this).load(Online.getCurrentUser().getPhotoUserUrl()).into(userPhoto);

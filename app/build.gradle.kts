@@ -47,4 +47,5 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation ("com.squareup.picasso:picasso:2.5.2")
     implementation ("com.github.rey5137:material:1.3.1")
+    implementation ("io.github.pilgr:paperdb:2.7.2")
 }

@@ -14,7 +14,7 @@
         android:layout_marginTop="200dp"
         android:layout_marginRight="25dp"
         android:hint="номер"
-        android:inputType="textPassword"
+        android:inputType="number"
         android:padding="15dp" />
 
     <EditText
@@ -25,7 +25,7 @@
         android:layout_marginTop="270dp"
         android:layout_marginRight="25dp"
         android:hint="Пapoль"
-        android:inputType="textPassword"
+        android:inputType="textPersonName"
         android:padding="15dp" />
 
     <Button
@@ -56,5 +56,19 @@
         android:text="регистрация"
         android:textSize="20dp"
         />
+
+    <CheckBox
+        android:id="@+id/rememberUser_CheckBox"
+        style="@style/Material.Drawable.CheckBox"
+        android:layout_width="295dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/in_button"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="131dp"
+        android:layout_marginEnd="90dp"
+        android:layout_marginBottom="158dp"
+        android:text="Меня легко потерять и невозможно забыть"
+        android:textAllCaps="false"
+        android:textSize="20dp" />
 
 </RelativeLayout>

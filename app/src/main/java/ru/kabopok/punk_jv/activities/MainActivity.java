@@ -7,12 +7,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.paperdb.Paper;
 import ru.kabopok.punk_jv.R;
+import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.ProductAdapter;
 import ru.kabopok.punk_jv.classes.User;
@@ -39,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText passwordData;
     private Button registration;
 
+    final LoadingBar loadingBar = new LoadingBar(MainActivity.this);
+    private CheckBox rememberUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
             numberData = (EditText) findViewById(R.id.input_text_number);
             passwordData = (EditText) findViewById(R.id.input_text_password);
             inputButton = (Button) findViewById(R.id.in_button);
+            rememberUser =findViewById(R.id.rememberUser_CheckBox);
+        }
+        Paper.init(this);
+        String rememberPhone = Paper.book().read(Online.UserPhoneKey);
+        String rememberPassword = Paper.book().read(Online.UserPasswordKey);
+        if(rememberPhone !=""&& rememberPassword!=""){
+            if(!TextUtils.isEmpty(rememberPhone) && !TextUtils.isEmpty(rememberPassword)){
+                chekInBase(rememberPhone, rememberPassword);
+            }
         }
         registration.setOnClickListener((v)->{
             Intent regIntent = new Intent(MainActivity.this, RegistrationActivity.class);
@@ -69,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void chekInBase(String number, String password) {
+
+        loadingBar.show();
+
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -79,13 +98,19 @@ public class MainActivity extends AppCompatActivity {
                     User user = dataSnapshot.child("Users").child(number).getValue(User.class);
                     if(user.getPassword().equals(password)){
                         Online.setCurrentUser(user);
+                        if(rememberUser.isChecked()){
+                            Paper.book().write(Online.UserPhoneKey, number);
+                            Paper.book().write(Online.UserPasswordKey, password);
+                        }
+                        loadingBar.dismiss();
                         Toast.makeText(MainActivity.this, " вечер в хату ", Toast.LENGTH_LONG).show();
                         Intent regIntent = new Intent(MainActivity.this, HomeActivity.class);
                         startActivity(regIntent);
                     }
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "такой попки я ещё не видал -> занеси свою попку в мою базу " + number, Toast.LENGTH_LONG).show();
+                    loadingBar.dismiss();
+                    Toast.makeText(MainActivity.this, "Ты кто такой?" + number, Toast.LENGTH_LONG).show();
                     Intent regIntent = new Intent(MainActivity.this, RegistrationActivity.class);
                     startActivity(regIntent);
                 }

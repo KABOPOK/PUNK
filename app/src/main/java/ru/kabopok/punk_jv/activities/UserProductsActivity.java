@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,63 +18,36 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.ProductAdapter;
+import ru.kabopok.punk_jv.classes.User;
 import ru.kabopok.punk_jv.current.Online;
 
-public class HomeActivity extends AppCompatActivity {
+public class UserProductsActivity extends AppCompatActivity {
 
     RecyclerView rvProducts;
     ProductAdapter productAdapter;
-    SearchView searchView;
+    TextView title;
     List<Product> productList = new ArrayList<>();
-
     Button profileButton;
+    User currentUser = Online.getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        rvProducts = findViewById(R.id.rvProducts);
-        searchView = findViewById(R.id.searchView);
-        profileButton = findViewById(R.id.profile_Button);
-        searchView.clearFocus();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                showFilterList(newText);
-                return false;
-            }
-        });
-
+        setContentView(R.layout.activity_user_products);
+        title = findViewById(R.id.title_TextView);
+        rvProducts = findViewById(R.id.rvUserProducts);
+        profileButton = findViewById(R.id.profile_Button1);
+        title.setText("ну, типо, твои товары");
         profileButton.setOnClickListener((v)->{
-            Intent profileIntent = new Intent(HomeActivity.this, ProfileActivity.class);
+            Intent profileIntent = new Intent(UserProductsActivity.this, ProfileActivity.class);
             startActivity(profileIntent);
         });
         setData();
         prepareRV();
-    }
-
-
-    private void showFilterList(String newText) {
-        List<Product> filteredList = new ArrayList<>();
-        for (Product product : productList) {
-            if (product.getProductName().toLowerCase().contains(newText)) {
-                filteredList.add(product);
-            }
-        }
-
-        if (filteredList.isEmpty()) {
-            Toast.makeText(this, "раскупили такие", Toast.LENGTH_LONG).show();
-        } else {
-            productAdapter.setProductList(filteredList);
-        }
     }
 
     private void prepareRV() {
@@ -91,19 +63,38 @@ public class HomeActivity extends AppCompatActivity {
 
     private void selectedProduct(Product product) {
         Online.setCurrentProduct(product);
-        Intent productIntent = new Intent(HomeActivity.this, ProductActivity.class);
+        Intent productIntent = new Intent(UserProductsActivity.this, ProductActivity.class);
         startActivity(productIntent);
     }
 
     private void setData() {
+        List idOdProducts = new ArrayList<String>();
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.child("Products").getChildren()) {
-                    Product product = postSnapshot.getValue(Product.class);
-                    productList.add(product);
+                for (DataSnapshot postSnapshot: dataSnapshot.child("Users")
+                        .child(currentUser.getNumber()).child("UserProducts").getChildren())
+                {
+                    String productId = postSnapshot.getValue(String.class);
+                    idOdProducts.add(productId);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        rootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(int i = 0; i < idOdProducts.size(); ++i){
+                    if(dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).exists()){
+                        Product product = dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).getValue(Product.class);
+                        productList.add(product);
+                    }
                 }
                 prepareAdapter();
             }

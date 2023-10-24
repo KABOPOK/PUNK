@@ -60,12 +60,27 @@
 
     <Button
         android:id="@+id/profilePushProduct_Button"
-        android:layout_width="317dp"
-        android:layout_height="83dp"
-        android:text="хочу продаьть штучку"
+        android:layout_width="176dp"
+        android:layout_height="77dp"
+        android:text="хочу продать"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.018"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileNumber_TextView" />
+        app:layout_constraintTop_toBottomOf="@+id/userProfileNumber_TextView"
+        app:layout_constraintVertical_bias="0.555" />
+
+    <Button
+        android:id="@+id/userProducts_Button"
+        android:layout_width="190dp"
+        android:layout_height="77dp"
+        android:text="что я продаю?"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.975"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileNumber_TextView"
+        app:layout_constraintVertical_bias="0.49" />
 </androidx.constraintlayout.widget.ConstraintLayout>
