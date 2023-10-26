@@ -3,27 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
-    android:background="#EAE9E6"
+    android:layout_height="226dp"
+    android:background="#1E1E1E"
     >
-
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_margin="10dp"
+        android:layout_height="192dp"
+        android:layout_margin="20dp"
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+            android:layout_height="match_parent"
+            android:background="#292929"
+            >
             <ImageView
                 android:id="@+id/row_image_ImageView"
                 android:layout_width="161dp"
@@ -40,11 +40,13 @@
             <TextView
                 android:id="@+id/row_productName_TextView"
                 android:layout_width="176dp"
+                android:textColorHint="@color/white"
+                android:textColorLink="@color/white"
                 android:layout_height="45dp"
                 android:layout_marginTop="20dp"
                 android:text="UserName"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +62,7 @@
                 android:layout_marginTop="20dp"
                 android:text="UserName"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="10sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -75,13 +77,27 @@
                 android:layout_centerHorizontal="true"
                 android:text="UserName"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="10sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/row_image_ImageView"
                 app:layout_constraintTop_toBottomOf="@+id/row_productInfo_TextView" />
+
+            <com.varunest.sparkbutton.SparkButton
+                android:id="@+id/heartOnProduct_SparkButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:sparkbutton_activeImage="@drawable/ic_heart"
+                app:sparkbutton_iconSize="40dp"
+                app:sparkbutton_inActiveImage="@drawable/ic_heart_border"
+                app:sparkbutton_primaryColor="@color/orange"
+                app:sparkbutton_secondaryColor="@color/red" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

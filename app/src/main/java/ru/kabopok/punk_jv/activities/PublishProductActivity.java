@@ -118,7 +118,7 @@ public class PublishProductActivity extends AppCompatActivity {
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriOfImg);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 40,byteArrayOutputStream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 40,byteArrayOutputStream);
             bytes = byteArrayOutputStream.toByteArray();
         }catch (IOException e){
             e.printStackTrace();

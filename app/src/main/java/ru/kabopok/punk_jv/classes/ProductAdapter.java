@@ -1,8 +1,6 @@
 package ru.kabopok.punk_jv.classes;
 
 import android.content.Context;
-import android.graphics.Matrix;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+import com.varunest.sparkbutton.SparkButton;
+import com.varunest.sparkbutton.SparkEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +27,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
 
     private ProductOnClickListener productOnClickListener;
 
+    private ActivateHeartListener activateHeartListener;
+
+    private DeactivateHeartListener deactivateHeartListener;
 
 
+
+    public ProductAdapter(List<Product> productList, Context context, ProductOnClickListener productOnClickListener,
+    ActivateHeartListener activateHeartListener, DeactivateHeartListener deactivateHeartListener){
+        this.productList = productList;
+        this.context = context;
+        this.productOnClickListener  = productOnClickListener;
+        this.activateHeartListener = activateHeartListener;
+        this.deactivateHeartListener = deactivateHeartListener;
+    }
     public ProductAdapter(List<Product> productList, Context context, ProductOnClickListener productOnClickListener){
         this.productList = productList;
         this.context = context;
         this.productOnClickListener  = productOnClickListener;
+        this.activateHeartListener = null;
+        this.deactivateHeartListener = null;
     }
-
     public void setProductList(List<Product> filteredList) {
         productList = filteredList;
         notifyDataSetChanged();
@@ -42,6 +55,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
 
     public interface ProductOnClickListener{
         void selectedProduct(Product product);
+    }
+
+    public interface ActivateHeartListener{
+        void activateHeart(Product product);
+    }
+
+    public interface DeactivateHeartListener {
+        void deactivateHeart(Product product);
     }
 
     @NonNull
@@ -65,6 +86,29 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
                 productOnClickListener.selectedProduct(product);
             }
         });
+
+
+        holder.heartButton.setEventListener(new SparkEventListener() {
+            @Override
+            public void onEvent(ImageView button, boolean buttonState) {
+                if(buttonState){
+                    activateHeartListener.activateHeart(product);
+                }
+                else{
+                    deactivateHeartListener.deactivateHeart(product);
+                }
+            }
+
+            @Override
+            public void onEventAnimationEnd(ImageView button, boolean buttonState) {
+
+            }
+
+            @Override
+            public void onEventAnimationStart(ImageView button, boolean buttonState) {
+
+            }
+        });
     }
 
     @Override
@@ -77,12 +121,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         private TextView row_name;
         private TextView row_info;
         private TextView row_price;
+        private SparkButton heartButton;
         public ProductAdapterVh(@NonNull View itemView) {
             super(itemView);
             row_image = itemView.findViewById(R.id.row_image_ImageView);
             row_name = itemView.findViewById(R.id.row_productName_TextView);
             row_info = itemView.findViewById(R.id.row_productInfo_TextView);
             row_price = itemView.findViewById(R.id.row_productPrice_TextView);
+            heartButton = itemView.findViewById(R.id.heartOnProduct_SparkButton);
         }
     }
 }

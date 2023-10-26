@@ -85,7 +85,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void prepareAdapter() {
-        productAdapter = new ProductAdapter(productList, this, this::selectedProduct);
+        productAdapter = new ProductAdapter(productList, this, this::selectedProduct,
+                this::activateHeart, this::deactivateHeart);
         rvProducts.setAdapter(productAdapter);
     }
 
@@ -93,6 +94,13 @@ public class HomeActivity extends AppCompatActivity {
         Online.setCurrentProduct(product);
         Intent productIntent = new Intent(HomeActivity.this, ProductActivity.class);
         startActivity(productIntent);
+    }
+
+    private void activateHeart(Product product){
+        Toast.makeText(this,"work",Toast.LENGTH_LONG);
+    }
+    private void deactivateHeart(Product product){
+        Toast.makeText(this,"work",Toast.LENGTH_LONG);
     }
 
     private void setData() {

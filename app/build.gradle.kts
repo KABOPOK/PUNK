@@ -44,8 +44,15 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+
+    implementation("androidx.navigation:navigation-fragment:2.7.3")
+    implementation("androidx.navigation:navigation-ui:2.7.3")
+
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation ("com.squareup.picasso:picasso:2.5.2")
     implementation ("com.github.rey5137:material:1.3.1")
     implementation ("io.github.pilgr:paperdb:2.7.2")
+    implementation("com.github.varunest:sparkbutton:1.0.6")
 }

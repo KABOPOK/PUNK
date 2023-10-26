@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/vector_ic_home"
+        android:title=""
+        android:id="@+id/home"/>
+    <item
+        android:id="@+id/fab"
+        android:title=""
+        android:enabled="true"
+        android:icon="@drawable/vector_ic_favourite"/>
+    <item
+        android:id="@+id/cart"
+        android:title=""
+        android:enabled="true"
+        android:icon="@drawable/vector_ic_cart"
+        />
+    <item
+        android:id="@+id/hfoe"
+        android:enabled="true"
+        android:title=""
+        android:icon="@drawable/vector_ic_cart"
+        />
+    <item
+        android:id="@+id/profile"
+        android:title=""
+        android:enabled="true"
+        android:icon="@drawable/vector_ic_profile"
+        />
+</menu>
