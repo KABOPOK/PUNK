@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="226dp"
+    android:layout_height="286dp"
     android:background="#1E1E1E"
     >
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
-        android:layout_height="192dp"
-        android:layout_margin="20dp"
+        android:layout_height="245dp"
+        android:layout_margin="15dp"
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
         app:cardCornerRadius="18dp"
@@ -22,12 +22,12 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#292929"
-            >
+            android:background="#292929">
+
             <ImageView
                 android:id="@+id/row_image_ImageView"
-                android:layout_width="161dp"
-                android:layout_height="155dp"
+                android:layout_width="132dp"
+                android:layout_height="163dp"
                 android:layout_marginStart="16dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
@@ -35,62 +35,119 @@
                 app:layout_constraintDimensionRatio="H,1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.511" />
+                app:layout_constraintVertical_bias="0.841" />
+
 
             <TextView
                 android:id="@+id/row_productName_TextView"
-                android:layout_width="176dp"
+                android:layout_width="250dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="16dp"
+                android:gravity="left"
+                android:text="MULTIBAPKA"
+                android:textColor="@color/strangeYellow"
                 android:textColorHint="@color/white"
                 android:textColorLink="@color/white"
-                android:layout_height="45dp"
-                android:layout_marginTop="20dp"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/row_image_ImageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.121"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="90dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="156dp"
+                android:layout_marginTop="68dp"
+                android:text="Продаватель"
+                android:textSize="12sp"
+                android:textColor="@color/strangeYellow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="90dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="156dp"
+                android:layout_marginTop="8dp"
+                android:text="стоимость"
+                android:textSize="12sp"
+                android:textColor="@color/strangeYellow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <TextView
+                android:layout_width="90dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="156dp"
+                android:text="проблемки"
+                android:textSize="12sp"
+                android:textColor="@color/strangeYellow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                app:layout_constraintVertical_bias="0.085" />
+
+            <TextView
+                android:id="@+id/row_userName_TextView"
+                android:layout_width="116dp"
+                android:layout_height="25dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="68dp"
+                android:gravity="right"
                 android:text="UserName"
-                android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.589"
+                app:layout_constraintHorizontal_bias="0.957"
                 app:layout_constraintStart_toEndOf="@+id/row_image_ImageView"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/row_productInfo_TextView"
-                android:layout_width="179dp"
-                android:layout_height="56dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:text="UserName"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.555"
-                app:layout_constraintStart_toEndOf="@+id/row_image_ImageView"
-                app:layout_constraintTop_toBottomOf="@+id/row_productName_TextView" />
-
-            <TextView
                 android:id="@+id/row_productPrice_TextView"
-                android:layout_width="139dp"
-                android:layout_height="19dp"
+                android:layout_width="116dp"
+                android:layout_height="25dp"
                 android:layout_centerHorizontal="true"
-                android:text="UserName"
-                android:textAlignment="center"
+                android:layout_marginStart="109dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginBottom="116dp"
+                android:gravity="center"
+                android:text="price"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.333"
                 app:layout_constraintStart_toEndOf="@+id/row_image_ImageView"
-                app:layout_constraintTop_toBottomOf="@+id/row_productInfo_TextView" />
+                app:layout_constraintTop_toTopOf="@+id/row_userName_TextView"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/row_productInfo_TextView"
+                android:layout_width="189dp"
+                android:layout_height="58dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.4"
+                app:layout_constraintStart_toEndOf="@+id/row_image_ImageView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.914" />
 
             <com.varunest.sparkbutton.SparkButton
                 android:id="@+id/heartOnProduct_SparkButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:sparkbutton_activeImage="@drawable/ic_heart"

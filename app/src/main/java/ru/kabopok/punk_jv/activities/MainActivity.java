@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     final LoadingBar loadingBar = new LoadingBar(MainActivity.this);
     private CheckBox rememberUser;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

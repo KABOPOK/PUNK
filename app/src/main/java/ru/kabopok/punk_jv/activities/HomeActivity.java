@@ -1,125 +1,52 @@
 package ru.kabopok.punk_jv.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import ru.kabopok.punk_jv.R;
-import ru.kabopok.punk_jv.classes.Product;
-import ru.kabopok.punk_jv.classes.ProductAdapter;
-import ru.kabopok.punk_jv.current.Online;
+import ru.kabopok.punk_jv.databinding.ActivityHomeBinding;
+import ru.kabopok.punk_jv.databinding.ActivityMainBinding;
+import ru.kabopok.punk_jv.fragments.FavouriteProductsFragment;
+import ru.kabopok.punk_jv.fragments.HomeFragment;
+import ru.kabopok.punk_jv.fragments.ProfileFragment;
+import ru.kabopok.punk_jv.fragments.PublishProductFragment;
+import ru.kabopok.punk_jv.fragments.UserProductsFragment;
 
 public class HomeActivity extends AppCompatActivity {
-
-    RecyclerView rvProducts;
-    ProductAdapter productAdapter;
-    SearchView searchView;
-    List<Product> productList = new ArrayList<>();
-
-    Button profileButton;
+    ActivityHomeBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        rvProducts = findViewById(R.id.rvProducts);
-        searchView = findViewById(R.id.searchView);
-        profileButton = findViewById(R.id.profile_Button);
-        searchView.clearFocus();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        replaceFragment(new HomeFragment());
+        binding.navigationPanelBottomNavigationView.setBackground(null);
+        binding.navigationPanelBottomNavigationView.setOnItemSelectedListener(item -> {
+            if(item.getItemId() == R.id.home){
+                replaceFragment(new HomeFragment());
             }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                showFilterList(newText);
-                return false;
+            else if(item.getItemId() == R.id.favourite_menu) {
+                replaceFragment(new FavouriteProductsFragment());
             }
+            else if(item.getItemId() == R.id.pushProduct_menu) {
+                replaceFragment(new PublishProductFragment());
+            }
+            else if(item.getItemId() == R.id.cart_menu) {
+                replaceFragment(new UserProductsFragment());
+            }
+            else if(item.getItemId() == R.id.profile_menu) {
+                replaceFragment(new ProfileFragment());
+            }
+            return true;
         });
-
-        profileButton.setOnClickListener((v)->{
-            Intent profileIntent = new Intent(HomeActivity.this, ProfileActivity.class);
-            startActivity(profileIntent);
-        });
-        setData();
-        prepareRV();
     }
-
-
-    private void showFilterList(String newText) {
-        List<Product> filteredList = new ArrayList<>();
-        for (Product product : productList) {
-            if (product.getProductName().toLowerCase().contains(newText)) {
-                filteredList.add(product);
-            }
-        }
-
-        if (filteredList.isEmpty()) {
-            Toast.makeText(this, "раскупили такие", Toast.LENGTH_LONG).show();
-        } else {
-            productAdapter.setProductList(filteredList);
-        }
-    }
-
-    private void prepareRV() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        rvProducts.setLayoutManager(linearLayoutManager);
-        prepareAdapter();
-    }
-
-    private void prepareAdapter() {
-        productAdapter = new ProductAdapter(productList, this, this::selectedProduct,
-                this::activateHeart, this::deactivateHeart);
-        rvProducts.setAdapter(productAdapter);
-    }
-
-    private void selectedProduct(Product product) {
-        Online.setCurrentProduct(product);
-        Intent productIntent = new Intent(HomeActivity.this, ProductActivity.class);
-        startActivity(productIntent);
-    }
-
-    private void activateHeart(Product product){
-        Toast.makeText(this,"work",Toast.LENGTH_LONG);
-    }
-    private void deactivateHeart(Product product){
-        Toast.makeText(this,"work",Toast.LENGTH_LONG);
-    }
-
-    private void setData() {
-        final DatabaseReference rootRef;
-        rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.child("Products").getChildren()) {
-                    Product product = postSnapshot.getValue(Product.class);
-                    productList.add(product);
-                }
-                prepareAdapter();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.Frame_layout, fragment);
+        fragmentTransaction.commit();
     }
 }
