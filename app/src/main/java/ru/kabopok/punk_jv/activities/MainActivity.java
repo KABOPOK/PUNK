@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -39,12 +41,12 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
     private Button inputButton;
-    private EditText numberData;
-    private EditText passwordData;
     private Button registration;
 
     final LoadingBar loadingBar = new LoadingBar(MainActivity.this);
     private CheckBox rememberUser;
+
+    private TextView punkText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,35 +54,30 @@ public class MainActivity extends AppCompatActivity {
         //Set Data
         {
             registration = (Button) findViewById(R.id.register_button);
-            numberData = (EditText) findViewById(R.id.input_text_number);
-            passwordData = (EditText) findViewById(R.id.input_text_password);
             inputButton = (Button) findViewById(R.id.in_button);
-            rememberUser =findViewById(R.id.rememberUser_CheckBox);
+            rememberUser = findViewById(R.id.rememberUser_CheckBox);
+            punkText = findViewById(R.id.textView5);
         }
-        Paper.init(this);
-        String rememberPhone = Paper.book().read(Online.UserPhoneKey);
-        String rememberPassword = Paper.book().read(Online.UserPasswordKey);
-        if(rememberPhone !=""&& rememberPassword!=""){
-            if(!TextUtils.isEmpty(rememberPhone) && !TextUtils.isEmpty(rememberPassword)){
-                chekInBase(rememberPhone, rememberPassword);
+        Typeface typeface = Typeface.create("sans-serif", Typeface.NORMAL);
+        punkText.setTypeface(typeface);
+        inputButton.setOnClickListener((v) -> {
+            Paper.init(this);
+            String rememberPhone = Paper.book().read(Online.UserPhoneKey);
+            String rememberPassword = Paper.book().read(Online.UserPasswordKey);
+            if (rememberPhone != "" && rememberPassword != "") {
+                if (!TextUtils.isEmpty(rememberPhone) && !TextUtils.isEmpty(rememberPassword)) {
+                    chekInBase(rememberPhone, rememberPassword);
+                }
             }
-        }
-        registration.setOnClickListener((v)->{
+            else {
+                Intent inputIntent = new Intent(MainActivity.this, InputActivity.class);
+                startActivity(inputIntent);
+            }
+        });
+        registration.setOnClickListener((v) -> {
             Intent regIntent = new Intent(MainActivity.this, RegistrationActivity.class);
             startActivity(regIntent);
         });
-        inputButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InToApp();
-            }
-        });
-    }
-
-    private void InToApp() {
-        String number = numberData.getText().toString();
-        String password = passwordData.getText().toString();
-        chekInBase(number, password);
     }
 
     private void chekInBase(String number, String password) {
@@ -97,10 +94,6 @@ public class MainActivity extends AppCompatActivity {
                     User user = dataSnapshot.child("Users").child(number).getValue(User.class);
                     if(user.getPassword().equals(password)){
                         Online.setCurrentUser(user);
-                        if(rememberUser.isChecked()){
-                            Paper.book().write(Online.UserPhoneKey, number);
-                            Paper.book().write(Online.UserPasswordKey, password);
-                        }
                         loadingBar.dismiss();
                         Toast.makeText(MainActivity.this, " вечер в хату ", Toast.LENGTH_LONG).show();
                         Intent regIntent = new Intent(MainActivity.this, HomeActivity.class);

@@ -3,12 +3,14 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:gravity="center"
+    android:background="@color/strangeLowBlack"
     android:layout_height="wrap_content">
 
 
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="100dp"
+        android:indeterminateDrawable="@drawable/progress_style"
         android:layout_marginRight="20dp" />
 
     <TextView
@@ -16,7 +18,7 @@
         android:layout_height="100dp"
         android:gravity="center"
         android:text="Жди сиди..."
-        android:textColor="@color/black"
+        android:textColor="@color/strangeYellow"
         android:textSize="30dp"
         android:textStyle="bold" />
 
