@@ -1,7 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.PUNK_JV" parent="Theme.Material3.DayNight.NoActionBar">
-
+        <item name="background">@color/strangeLowBlack</item>
+        <item name="colorPrimary">@color/strangeBlack</item>
+        <item name="colorPrimaryDark">@color/strangeBlack</item>
+        <item name="colorAccent">@color/strangeBlack</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@color/strangeBlack</item>
+    </style>
+    <style name="ItemStyle">
+        <item name="android:background">@color/strangeLowBlack</item>
+        <item name="sparkbutton_primaryColor">@color/strangeLowBlack</item>
+        <item name="colorPrimary">@color/strangeLowBlack</item>
+        <item name="colorPrimaryDark">@color/strangeLowBlack</item>
+        <item name="colorAccent">@color/strangeLowBlack</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@color/strangeLowBlack</item>
     </style>
     <style name="BottomNavigation">
         <item name="android:background">@color/black</item>
@@ -18,6 +32,11 @@
         <item name="enforceTextAppearance">true</item>
         <item name="enforceMaterialTheme">true</item>
         <item name="labelVisibilityMode">labeled</item>
+    </style>
+    <style name="ImageStyle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+        <item name="color">@color/strangeBlack</item>
     </style>
     <style name="Theme.PUNK_JV" parent="Base.Theme.PUNK_JV" />
 </resources>

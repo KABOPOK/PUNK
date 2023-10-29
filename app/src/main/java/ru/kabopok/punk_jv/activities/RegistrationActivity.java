@@ -31,6 +31,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -55,19 +57,19 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText numberData;
     private EditText passwordData;
 
-    public final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == RESULT_OK) {
-                if (result.getData() != null) {
-                    photoUserUri = result.getData().getData();
-                    Glide.with(getApplicationContext()).load(photoUserUri).into(photoUser);
-                }
-            } else {
-                Toast.makeText(RegistrationActivity.this, "Выбири свою лучшую фоточку", Toast.LENGTH_SHORT).show();
-            }
-        }
-    });
+//    public final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+//        @Override
+//        public void onActivityResult(ActivityResult result) {
+//            if (result.getResultCode() == RESULT_OK) {
+//                if (result.getData() != null) {
+//                    photoUserUri = result.getData().getData();
+//                    Glide.with(getApplicationContext()).load(photoUserUri).into(photoUser);
+//                }
+//            } else {
+//                Toast.makeText(RegistrationActivity.this, "Выбири свою лучшую фоточку", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +88,10 @@ public class RegistrationActivity extends AppCompatActivity {
         photoUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                activityResultLauncher.launch(intent);
+//                Intent intent = new Intent(Intent.ACTION_PICK);
+//                intent.setType("image/*");
+//                activityResultLauncher.launch(intent);
+                startCropActivity();
             }
         });
         createUser.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +113,25 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                photoUserUri = result.getUri();
+                photoUser.setImageURI(photoUserUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+    }
+
+    private void startCropActivity(){
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .start(this);
+    }
     private void uploadImgWithCompress(){
         byte[] bytes = new byte[0];
         try {

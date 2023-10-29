@@ -9,13 +9,13 @@
         android:title="favourite"
         android:icon="@drawable/vector_ic_favourite"/>
     <item
-        android:id="@+id/cart_menu"
-        android:title="my products"
+        android:id="@+id/pushProduct_menu"
+        android:title="publish product"
         android:icon="@drawable/ic_vector_publish"
         />
     <item
-        android:id="@+id/pushProduct_menu"
-        android:title="publish product"
+        android:id="@+id/cart_menu"
+        android:title="my products"
         android:icon="@drawable/vector_ic_cart"
         />
     <item

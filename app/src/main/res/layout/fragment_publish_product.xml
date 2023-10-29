@@ -1,15 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/strangeBlack"
     tools:context=".fragments.PublishProductFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="@color/strangeBlack">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/product_image"
+            android:layout_width="290dp"
+            android:layout_height="310dp"
+            android:layout_marginTop="40dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:shapeAppearanceOverlay="@style/ImageStyle"
+            android:background="@color/strangeBlack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_vector_photo"
+            />
+
+        <EditText
+            android:id="@+id/product_title"
+            android:background="@color/strangeLowBlack"
+            android:layout_width="303dp"
+            android:layout_height="40dp"
+            android:textColor="@color/white"
+            android:layout_marginTop="15dp"
+            android:hint="название"
+            android:textColorHint="@color/white"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_image" />
+
+        <EditText
+            android:id="@+id/product_price"
+            android:background="@color/strangeLowBlack"
+            android:layout_width="303dp"
+            android:layout_height="40dp"
+            android:hint="цена"
+            android:textColorHint="@color/white"
+            android:gravity="center"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_title" />
+
+        <EditText
+            android:id="@+id/product_info"
+            android:background="@color/strangeLowBlack"
+            android:layout_width="303dp"
+            android:layout_height="120dp"
+            android:hint="описание"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="15dp"
+            android:textColorHint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_price" />
+
+        <Button
+            android:id="@+id/push_product_button"
+            android:layout_width="356dp"
+            android:layout_height="74dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/strangeLowBlack"
+            android:text="Пытаться продать"
+            android:textColor="@color/strangeYellow"
+            android:textSize="29sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_info" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

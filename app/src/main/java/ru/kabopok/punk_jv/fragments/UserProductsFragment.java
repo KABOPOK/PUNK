@@ -1,20 +1,108 @@
 package ru.kabopok.punk_jv.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ru.kabopok.punk_jv.R;
+import ru.kabopok.punk_jv.activities.ProductActivity;
+import ru.kabopok.punk_jv.activities.ProfileActivity;
+import ru.kabopok.punk_jv.activities.UserProductsActivity;
+import ru.kabopok.punk_jv.classes.Product;
+import ru.kabopok.punk_jv.classes.ProductAdapter;
+import ru.kabopok.punk_jv.classes.User;
+import ru.kabopok.punk_jv.current.Online;
 
 public class UserProductsFragment extends Fragment {
+    RecyclerView rvProducts;
+    ProductAdapter productAdapter;
+    TextView title;
+    List<Product> productList = new ArrayList<>();
+    User currentUser = Online.getCurrentUser();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_products, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_products, container, false);
+        title = view.findViewById(R.id.title_TextView);
+        rvProducts = view.findViewById(R.id.rvUserProducts);
+        title.setText("ну, типо, твои товары");
+        setData();
+        prepareRV();
+        return view;
+    }
+
+    private void prepareRV() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(),LinearLayoutManager.VERTICAL,false);
+        rvProducts.setLayoutManager(linearLayoutManager);
+        prepareAdapter();
+    }
+
+    private void prepareAdapter() {
+        productAdapter = new ProductAdapter(productList, this.getContext(), this::selectedProduct);
+        rvProducts.setAdapter(productAdapter);
+    }
+
+    private void selectedProduct(Product product) {
+        Online.setCurrentProduct(product);
+        Intent productIntent = new Intent(this.getContext(), ProductActivity.class);
+        startActivity(productIntent);
+    }
+
+    private void setData() {
+        List idOdProducts = new ArrayList<String>();
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.child("Users")
+                        .child(currentUser.getNumber()).child("UserProducts").getChildren())
+                {
+                    String productId = postSnapshot.getValue(String.class);
+                    idOdProducts.add(productId);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        rootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(int i = 0; i < idOdProducts.size(); ++i){
+                    if(dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).exists()){
+                        Product product = dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).getValue(Product.class);
+                        productList.add(product);
+                    }
+                }
+                prepareAdapter();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

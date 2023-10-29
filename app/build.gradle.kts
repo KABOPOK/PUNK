@@ -60,4 +60,8 @@ dependencies {
     implementation("com.github.varunest:sparkbutton:1.0.6")
 
     api ("com.theartofdev.edmodo:android-image-cropper:2.8.+")
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation ("com.karumi:dexter:6.2.3")
+    implementation ("com.github.yalantis:ucrop:2.2.6")
 }
