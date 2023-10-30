@@ -22,13 +22,16 @@ import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.activities.HomeActivity;
 import ru.kabopok.punk_jv.activities.ProductActivity;
 import ru.kabopok.punk_jv.activities.ProfileActivity;
+import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.ProductAdapter;
+import ru.kabopok.punk_jv.classes.User;
 import ru.kabopok.punk_jv.current.Online;
 
 import androidx.appcompat.widget.SearchView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,6 +45,8 @@ public class HomeFragment extends Fragment {
     ProductAdapter productAdapter;
     SearchView searchView;
     List<Product> productList = new ArrayList<>();
+
+    User currentUser = Online.getCurrentUser();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,23 +105,33 @@ public class HomeFragment extends Fragment {
     }
 
     private void activateHeart(Product product){
-        //Toast.makeText(this,"work",Toast.LENGTH_LONG);
+        addToFavourite(product);
     }
-    private void deactivateHeart(Product product){
-        //Toast.makeText(this,"work", Toast.LENGTH_LONG);
+    private void deactivateHeart(Product product) {
+        removeFromFavourite(product);
     }
 
     private void setData() {
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
+        final boolean[] alreadyHave = {false};
         rootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.child("Products").getChildren()) {
                     Product product = postSnapshot.getValue(Product.class);
-                    productList.add(product);
+                    for(int i =0; i < productList.size(); ++i){
+                        if(productList.get(i).getProductKey() == product.getProductKey()){
+                            alreadyHave[0] = true;
+                        }
+                    }
+                    if(!alreadyHave[0]) {
+                        productList.add(product);
+                    }
                 }
-                prepareAdapter();
+                if(!alreadyHave[0]) {
+                    prepareAdapter();
+                }
             }
 
             @Override
@@ -125,5 +140,37 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+    private void addToFavourite(Product product) {
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
+                if(dataSnapshot.child("Users").child(currentUser.getNumber()).exists()){
+                    HashMap<String, Object> currentProductName = new HashMap<>();
+                    currentProductName.put(product.getProductKey(), product.getProductKey());
+                    rootRef.child("Users").child(currentUser.getNumber()).child("FavouriteProducts").updateChildren(currentProductName);
+                }
+                else{
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void removeFromFavourite(Product product) {
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getNumber()).child("FavouriteProducts").child(product.getProductKey());
+        Task<Void> removeTask = rootRef.removeValue();
+        removeTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                product.getProductOwner();
+            }
+        });
+    }
 }

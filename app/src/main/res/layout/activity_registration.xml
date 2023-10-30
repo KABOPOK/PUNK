@@ -31,6 +31,7 @@
         android:textColor="@color/white"
         android:layout_marginRight="25dp"
         android:background="@color/strangeLowBlack"
+        android:textColorHint="@color/white"
         android:hint="имя"
         android:inputType="textPersonName"
         android:padding="15dp" />
@@ -41,6 +42,7 @@
         android:layout_height="wrap_content"
         android:background="@color/strangeLowBlack"
         android:layout_marginLeft="25dp"
+        android:textColorHint="@color/white"
         android:layout_marginTop="480dp"
         android:textColor="@color/white"
         android:layout_marginRight="25dp"
@@ -53,6 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/strangeLowBlack"
+        android:textColorHint="@color/white"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="415dp"
         android:layout_marginRight="25dp"
@@ -72,6 +75,7 @@
         android:layout_marginRight="25dp"
         android:layout_marginBottom="95dp"
         android:hint="Пapoль"
+        android:textColorHint="@color/white"
         android:inputType="textPersonName"
         android:padding="15dp" />
 

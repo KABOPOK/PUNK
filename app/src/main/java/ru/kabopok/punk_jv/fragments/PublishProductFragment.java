@@ -142,30 +142,30 @@ public class PublishProductFragment extends Fragment {
                         String price = productPrice.getText().toString();
                         String info = productInfo.getText().toString();
                         String imgURL = imgUrl.toString();
-                        String user = Online.getCurrentUser().getNumber();
-                        sendToBase(user,name,price,info,imgURL, loadingBar);
+                        sendToBase(name,price,info,imgURL, loadingBar);
                     }
                 });
             }
         });
     }
-    private void sendToBase(String number, String productName, String productPrice, String productInfo, String
+    private void sendToBase(String productName, String productPrice, String productInfo, String
         URL, LoadingBar loadingBar) {
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                long count_long = dataSnapshot.child("Products").getChildrenCount();
-                String count = String.valueOf(count_long);
                 UUID uniqueKey = UUID.randomUUID();
-                if(!dataSnapshot.child("Products").child(String.valueOf(uniqueKey)).exists()){
+                String key = String.valueOf(uniqueKey);
+                if(!dataSnapshot.child("Products").child(key).exists()){
                     HashMap<String, Object> userHashMap= new HashMap<>();
+                    userHashMap.put("productKey",key);
+                    userHashMap.put("productOwnerName",currentUser.getName());
                     userHashMap.put("productName",productName);
+                    userHashMap.put("URL",URL);
                     userHashMap.put("productPrice",productPrice);
                     userHashMap.put("productInfo",productInfo);
-                    userHashMap.put("URL",URL);
-                    userHashMap.put("productOwner",Online.getCurrentUser().getNumber());
+                    userHashMap.put("productOwner",currentUser.getNumber());
                     rootRef.child("Products").child(String.valueOf(uniqueKey)).updateChildren(userHashMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

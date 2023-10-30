@@ -1,5 +1,8 @@
 package ru.kabopok.punk_jv.classes;
 public class Product {
+
+    String productKey;
+    String productOwnerName;
     String URL;
     String productName;
     String productPrice;
@@ -7,10 +10,39 @@ public class Product {
     String productOwner;
     public Product(){
         this.URL = null;
+        this.productKey = null;
+        this.productOwnerName = null;
         this.productName = null;
         this.productPrice = null;
         this.productInfo = null;
         this.productOwner = null;
+    }
+
+    public Product(String productKey, String productOwnerName, String URL, String productName, String productPrice, String productInfo, String productOwner) {
+        this.productKey = productKey;
+        this.productOwnerName = productOwnerName;
+        this.URL = URL;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productInfo = productInfo;
+        this.productOwner = productOwner;
+    }
+
+
+    public String getProductKey() {
+        return productKey;
+    }
+
+    public void setProductKey(String productKey) {
+        this.productKey = productKey;
+    }
+
+    public String getProductOwnerName() {
+        return productOwnerName;
+    }
+
+    public void setProductOwnerName(String productOwnerName) {
+        this.productOwnerName = productOwnerName;
     }
 
     public String getURL() {

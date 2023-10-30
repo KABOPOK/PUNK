@@ -64,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
             Paper.init(this);
             String rememberPhone = Paper.book().read(Online.UserPhoneKey);
             String rememberPassword = Paper.book().read(Online.UserPasswordKey);
-            if (rememberPhone != "" && rememberPassword != "") {
-                if (!TextUtils.isEmpty(rememberPhone) && !TextUtils.isEmpty(rememberPassword)) {
-                    chekInBase(rememberPhone, rememberPassword);
-                }
+            if (rememberPhone != "" && rememberPassword != "" &&
+                    !TextUtils.isEmpty(rememberPhone) && !TextUtils.isEmpty(rememberPassword)) {
+                chekInBase(rememberPhone, rememberPassword);
+
             }
             else {
                 Intent inputIntent = new Intent(MainActivity.this, InputActivity.class);
