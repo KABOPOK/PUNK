@@ -36,7 +36,7 @@
             android:textColor="@color/white"
             android:layout_marginTop="15dp"
             android:hint="название"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/hintColor"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
             android:layout_width="303dp"
             android:layout_height="40dp"
             android:hint="цена"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/hintColor"
             android:gravity="center"
             android:layout_marginTop="15dp"
             android:textColor="@color/white"
@@ -65,7 +65,7 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:layout_marginTop="15dp"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/hintColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.49"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,10 +80,11 @@
             android:text="Пытаться продать"
             android:textColor="@color/strangeYellow"
             android:textSize="29sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/product_info" />
+            app:layout_constraintTop_toBottomOf="@+id/product_info"
+            app:layout_constraintVertical_bias="0.302" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

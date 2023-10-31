@@ -7,4 +7,5 @@
     <color name="red">#B51111</color>
     <color name="orange">#EA3A02</color>
     <color name="strangeYellow">#FCA351</color>
+    <color name="hintColor">#7A7A7A</color>
 </resources>

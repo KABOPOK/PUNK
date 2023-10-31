@@ -6,28 +6,29 @@
     android:background="@color/strangeBlack"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.UserProductsFragment">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@color/strangeBlack"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/strangeBlack">
 
         <TextView
             android:id="@+id/title_TextView"
             android:layout_width="372dp"
             android:layout_height="49dp"
-            android:layout_marginBottom="596dp"
             android:background="@color/strangeBlack"
             android:gravity="center"
             android:textColor="@color/strangeYellow"
             android:textSize="30dp"
-            app:layout_constraintBottom_toBottomOf="@+id/rvUserProducts"
+            app:layout_constraintBottom_toTopOf="@+id/rvUserProducts"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvUserProducts"
             android:layout_width="match_parent"
-            android:layout_height="581dp"
+            android:layout_height="match_parent"
             android:layout_marginBottom="100dp"
             android:background="@color/strangeBlack"
             android:textAlignment="center"

@@ -1,6 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.PUNK_JV" parent="Theme.Material3.DayNight.NoActionBar">
-
+        <item name="background">@color/strangeLowBlack</item>
+        <item name="colorPrimary">@color/strangeBlack</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/strangeBlack</item>
+        <item name="colorAccent">@color/strangeBlack</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@color/strangeBlack</item>
     </style>
 </resources>
