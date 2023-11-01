@@ -3,8 +3,10 @@ package ru.kabopok.punk_jv.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -12,7 +14,13 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -47,13 +55,17 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.activities.HomeActivity;
+import ru.kabopok.punk_jv.activities.MainActivity;
 import ru.kabopok.punk_jv.activities.PublishProductActivity;
 import ru.kabopok.punk_jv.activities.UcropperActivity;
+import ru.kabopok.punk_jv.classes.ImageAdapter;
+import ru.kabopok.punk_jv.classes.ImagesAdapter;
 import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.classes.User;
 import ru.kabopok.punk_jv.current.Online;
@@ -71,7 +83,12 @@ public class PublishProductFragment extends Fragment {
     private Uri uriOfImg;
     private String imgUrl;
     private User currentUser = Online.getCurrentUser();
-    ActivityResultLauncher<String> cropImage;
+    private ViewPager viewPager;
+    ArrayList<Uri> uriArrayList = new ArrayList<>();
+    ImageAdapter imageAdapter;
+    Button pick;
+    private final int REQUEST_PERMISSION_CODE = 35;
+    private final int PICK_IMAGE_CODE = 39;
 
     public final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -97,15 +114,15 @@ public class PublishProductFragment extends Fragment {
         productPrice = (EditText) view.findViewById(R.id.product_price);
         productInfo = (EditText) view.findViewById(R.id.product_info);
         PushProduct = (Button) view.findViewById(R.id.push_product_button);
-        productImage = (ImageView) view.findViewById(R.id.product_image);
+        viewPager = view.findViewById(R.id.images_ViewPager);
+        pick = view.findViewById(R.id.pick);
 
         final LoadingBar loadingBar = new LoadingBar(this.getActivity());
-        productImage.setOnClickListener(new View.OnClickListener() {
+
+        pick.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                activityResultLauncher.launch(intent);
+            public void onClick(View v) {
+                checkUserPermission();
             }
         });
         PushProduct.setOnClickListener(v -> {
@@ -116,6 +133,58 @@ public class PublishProductFragment extends Fragment {
         return view;
     }
 
+    private void checkUserPermission(){
+        PickImages();
+//        if(ContextCompat.checkSelfPermission(  this.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_PERMISSION_CODE);
+//        }else{
+//            PickImages();
+//        }
+    }
+
+    private void PickImages() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(intent,PICK_IMAGE_CODE);
+
+        if(uriArrayList != null){
+            uriArrayList.clear();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(REQUEST_PERMISSION_CODE == requestCode){
+            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                PickImages();
+            }
+            else{
+                Toast.makeText(this.getContext(), "permisson denied", Toast.LENGTH_SHORT);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_CODE && resultCode == Activity.RESULT_OK){
+            if(data != null) {
+                if (data.getClipData() != null) {
+                    int x = data.getClipData().getItemCount();
+                    for (int i = 0; i < x; i++) {
+                        uriArrayList.add(data.getClipData().getItemAt(i).getUri());
+                    }
+                } else if (data.getData() != null) {
+                    uriArrayList.add(data.getData());
+                }
+                setAdapter();
+            }
+        }
+    }
 
     private void uploadImgWithCompress(LoadingBar loadingBar){
         byte[] bytes = new byte[0];
@@ -193,5 +262,9 @@ public class PublishProductFragment extends Fragment {
 
             }
         });
+    }
+    private void setAdapter(){
+        ImagesAdapter imagesAdapter = new ImagesAdapter(this.getContext(),uriArrayList);
+        viewPager.setAdapter(imagesAdapter);
     }
 }
