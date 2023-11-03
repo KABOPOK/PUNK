@@ -7,16 +7,15 @@
     android:background="@color/strangeBlack"
     tools:context=".activities.ProductActivity">
 
-    <ImageView
-        android:id="@+id/photoOfProduct_ImageView"
-        android:layout_width="410dp"
-        android:layout_height="381dp"
-        android:background="@color/strangeLowBlack"
-        android:layout_marginTop="4dp"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/images_ViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="291dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/priceOfProduct_TextView"
@@ -36,15 +35,15 @@
         android:id="@+id/nameOfProduct_TextView"
         android:layout_width="276dp"
         android:layout_height="53dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:background="@color/strangeLowBlack"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="50dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/photoOfProduct_ImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/images_ViewPager" />
 
     <TextView
         android:id="@+id/infoOfProduct_TextView"

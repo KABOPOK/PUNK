@@ -37,6 +37,8 @@ public class UserProductsFragment extends Fragment {
     TextView title;
     List<Product> productList = new ArrayList<>();
     User currentUser = Online.getCurrentUser();
+
+    Boolean AdapterPrepared = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,11 +55,11 @@ public class UserProductsFragment extends Fragment {
     private void prepareRV() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(),LinearLayoutManager.VERTICAL,false);
         rvProducts.setLayoutManager(linearLayoutManager);
-        prepareAdapter();
+        //prepareAdapter();
     }
 
     private void prepareAdapter() {
-        productAdapter = new ProductAdapter(productList, this.getContext(), this::selectedProduct);
+        productAdapter = new ProductAdapter(productList, this.getContext(), this::selectedProduct,true);
         rvProducts.setAdapter(productAdapter);
     }
 
@@ -90,13 +92,21 @@ public class UserProductsFragment extends Fragment {
         rootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(int i = 0; i < idOdProducts.size(); ++i){
-                    if(dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).exists()){
-                        Product product = dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).getValue(Product.class);
-                        productList.add(product);
+                if(!AdapterPrepared) {
+                    for (int i = 0; i < idOdProducts.size(); ++i) {
+                        if (dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).exists()) {
+                            Product product = dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).getValue(Product.class);
+                            ArrayList<String> photos = new ArrayList<>();
+                            for (DataSnapshot postSnapshotPhoto : dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).child("ProductPhotos").getChildren()) {
+                                photos.add(postSnapshotPhoto.getValue(String.class));
+                            }
+                            product.setImagesURLs(photos);
+                            productList.add(product);
+                        }
                     }
+                    prepareAdapter();
+                    AdapterPrepared = true;
                 }
-                prepareAdapter();
             }
 
             @Override

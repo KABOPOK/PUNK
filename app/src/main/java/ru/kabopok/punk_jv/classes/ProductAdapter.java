@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +41,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
 
     private User currentUser = Online.getCurrentUser();
 
+    private static Boolean myProductsLayout;
+
+    public ProductAdapter(List<Product> productList, Context context, ProductOnClickListener productOnClickListener, boolean myProductsLayout){
+        this.productList = productList;
+        this.context = context;
+        this.productOnClickListener  = productOnClickListener;
+        this.activateHeartListener = null;
+        this.deactivateHeartListener = null;
+        this.myProductsLayout = myProductsLayout;
+    }
+
     public ProductAdapter(List<Product> productList, Context context, ProductOnClickListener productOnClickListener,
     ActivateHeartListener activateHeartListener, DeactivateHeartListener deactivateHeartListener){
         this.productList = productList;
@@ -46,6 +59,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         this.productOnClickListener  = productOnClickListener;
         this.activateHeartListener = activateHeartListener;
         this.deactivateHeartListener = deactivateHeartListener;
+        this.myProductsLayout = false;
     }
     public ProductAdapter(List<Product> productList, Context context, ProductOnClickListener productOnClickListener){
         this.productList = productList;
@@ -53,6 +67,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         this.productOnClickListener  = productOnClickListener;
         this.activateHeartListener = null;
         this.deactivateHeartListener = null;
+        this.myProductsLayout = false;
     }
     public void setProductList(List<Product> filteredList) {
         productList = filteredList;
@@ -75,7 +90,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
     @Override
     public ProductAdapterVh onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.row_products, parent, false);
+        View view;
+        if(!myProductsLayout) {
+            view = LayoutInflater.from(context).inflate(R.layout.row_products, parent, false);
+        }
+        else{
+            view = LayoutInflater.from(context).inflate(R.layout.row_my_products, parent, false);
+        }
         return new ProductAdapterVh(view);
     }
 
@@ -86,33 +107,67 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         holder.row_price.setText(product.getProductPrice());
         holder.row_info.setText(product.getProductInfo());
         holder.row_user_name.setText(product.getProductOwnerName());
-        Picasso.with(context).load(product.getURL()).into(holder.row_image);
+        Picasso.with(context).load(product.getOnePhoto()).into(holder.row_image);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 productOnClickListener.selectedProduct(product);
             }
         });
-
-        setSparkButtonCondition(holder.heartButton, product.getProductKey());
-        holder.heartButton.setEventListener(new SparkEventListener() {
-            @Override
-            public void onEvent(ImageView button, boolean buttonState) {
-                if(buttonState){
-                    activateHeartListener.activateHeart(product);
+        if(!myProductsLayout) {
+            setSparkButtonCondition(holder.heartButton, product.getProductKey());
+            holder.heartButton.setEventListener(new SparkEventListener() {
+                @Override
+                public void onEvent(ImageView button, boolean buttonState) {
+                    if (buttonState) {
+                        activateHeartListener.activateHeart(product);
+                    } else {
+                        deactivateHeartListener.deactivateHeart(product);
+                    }
                 }
-                else{
-                    deactivateHeartListener.deactivateHeart(product);
+
+                @Override
+                public void onEventAnimationEnd(ImageView button, boolean buttonState) {
+
                 }
-            }
 
+                @Override
+                public void onEventAnimationStart(ImageView button, boolean buttonState) {
+
+                }
+            });
+        }
+        else{
+            holder.trashCase.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    deleteProduct(product);
+                    productList.remove(position);
+                    notifyDataSetChanged();
+                }
+            });
+        }
+
+    }
+
+    private void deleteProduct(Product product) {
+        //delete from myProducts
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getNumber()).child("UserProducts").child(product.getProductKey());
+        Task<Void> removeTask = rootRef.removeValue();
+
+        removeTask.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onEventAnimationEnd(ImageView button, boolean buttonState) {
+            public void onSuccess(Void unused) {
 
             }
-
+        });
+        //delete product
+        removeTask = FirebaseDatabase.getInstance().getReference("Products").child(product.getProductKey()).removeValue();
+        removeTask.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onEventAnimationStart(ImageView button, boolean buttonState) {
+            public void onSuccess(Void unused) {
 
             }
         });
@@ -144,6 +199,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
 
     public static class ProductAdapterVh extends RecyclerView.ViewHolder {
         private ImageView row_image;
+        private ImageView trashCase;
         private TextView row_name;
         private TextView row_user_name;
         private TextView row_info;
@@ -152,10 +208,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         public ProductAdapterVh(@NonNull View itemView) {
             super(itemView);
             row_image = itemView.findViewById(R.id.row_image_ImageView);
+            if(myProductsLayout) {
+                trashCase = itemView.findViewById(R.id.trashCase);
+            }
+            else{
+                heartButton = itemView.findViewById(R.id.heartOnProduct_SparkButton);
+            }
             row_name = itemView.findViewById(R.id.row_productName_TextView);
             row_info = itemView.findViewById(R.id.row_productInfo_TextView);
             row_price = itemView.findViewById(R.id.row_productPrice_TextView);
-            heartButton = itemView.findViewById(R.id.heartOnProduct_SparkButton);
             row_user_name = itemView.findViewById(R.id.row_userName_TextView);
         }
     }

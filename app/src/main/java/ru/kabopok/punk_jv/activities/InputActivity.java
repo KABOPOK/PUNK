@@ -42,14 +42,6 @@ public class InputActivity extends AppCompatActivity {
             inputButton = (Button) findViewById(R.id.in_button);
             rememberUser =findViewById(R.id.rememberUser_CheckBox);
         }
-        Paper.init(this);
-        String rememberPhone = Paper.book().read(Online.UserPhoneKey);
-        String rememberPassword = Paper.book().read(Online.UserPasswordKey);
-        if(rememberPhone !=""&& rememberPassword!=""){
-            if(!TextUtils.isEmpty(rememberPhone) && !TextUtils.isEmpty(rememberPassword)){
-                chekInBase(rememberPhone, rememberPassword);
-            }
-        }
         inputButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +71,7 @@ public class InputActivity extends AppCompatActivity {
                     if(user.getPassword().equals(password)){
                         Online.setCurrentUser(user);
                         if(rememberUser.isChecked()){
+                            Paper.book().destroy();
                             Paper.book().write(Online.UserPhoneKey, number);
                             Paper.book().write(Online.UserPasswordKey, password);
                         }

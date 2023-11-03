@@ -57,6 +57,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 
 import ru.kabopok.punk_jv.R;
@@ -71,42 +72,25 @@ import ru.kabopok.punk_jv.classes.User;
 import ru.kabopok.punk_jv.current.Online;
 
 public class PublishProductFragment extends Fragment {
-
-    public static final int RESULT_OK = -1;
     StorageReference storageReference;
     private EditText productTitle;
     private EditText productPrice;
     private EditText productInfo;
     private Button PushProduct;
     private StorageReference StoreRef;
-    private ImageView productImage;
     private Uri uriOfImg;
     private String imgUrl;
+    private int counter;
     private User currentUser = Online.getCurrentUser();
     private ViewPager viewPager;
     ArrayList<Uri> uriArrayList = new ArrayList<>();
-    ImageAdapter imageAdapter;
+    private String key;
     Button pick;
     private final int REQUEST_PERMISSION_CODE = 35;
     private final int PICK_IMAGE_CODE = 39;
-
-    public final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == RESULT_OK) {
-                if (result.getData() != null) {
-                    uriOfImg = result.getData().getData();
-                    productImage.setImageURI(uriOfImg);
-                }
-            } else {
-                //Toast.makeText(PublishProductActivity.this, "Please select an image", Toast.LENGTH_SHORT).show();
-            }
-        }
-    });
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_publish_product, container, false);
         storageReference = FirebaseStorage.getInstance().getReference();
         StoreRef = FirebaseStorage.getInstance().getReference("Image");
@@ -126,8 +110,8 @@ public class PublishProductFragment extends Fragment {
             }
         });
         PushProduct.setOnClickListener(v -> {
-            //uploadImage(uriOfImg);
             loadingBar.show();
+            sendToBase();
             uploadImgWithCompress(loadingBar);
         });
         return view;
@@ -152,7 +136,6 @@ public class PublishProductFragment extends Fragment {
             uriArrayList.clear();
         }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -166,7 +149,6 @@ public class PublishProductFragment extends Fragment {
             }
         }
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -187,53 +169,74 @@ public class PublishProductFragment extends Fragment {
     }
 
     private void uploadImgWithCompress(LoadingBar loadingBar){
-        byte[] bytes = new byte[0];
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContext().getContentResolver(), uriOfImg);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 40,byteArrayOutputStream);
-            bytes = byteArrayOutputStream.toByteArray();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        for(int i =0;  i < uriArrayList.size(); ++i) {
+            uriOfImg = uriArrayList.get(i);
+            byte[] bytes = new byte[0];
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContext().getContentResolver(), uriOfImg);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 40, byteArrayOutputStream);
+                bytes = byteArrayOutputStream.toByteArray();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
-        ref.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+            ref.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    //Toast.makeText(this.getContext(), "Image Uploaded!!", Toast.LENGTH_SHORT).show();
+                    Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            imgUrl = uri.toString();
+                            addPhoto(imgUrl,String.valueOf(counter));
+                            ++counter;
+                            if(counter >= uriArrayList.size()-1){
+                                loadingBar.dismiss();
+                                counter=0;
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private void addPhoto(String imgUrl, String counter) {
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //Toast.makeText(this.getContext(), "Image Uploaded!!", Toast.LENGTH_SHORT).show();
-                Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
-                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        imgUrl = uri.toString();
-                        String name = productTitle.getText().toString();
-                        String price = productPrice.getText().toString();
-                        String info = productInfo.getText().toString();
-                        String imgURL = imgUrl.toString();
-                        sendToBase(name,price,info,imgURL, loadingBar);
-                    }
-                });
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HashMap<String, Object> currentProductName = new HashMap<>();
+                currentProductName.put(counter,imgUrl);
+                rootRef.child("Products").child(key).child("ProductPhotos").updateChildren(currentProductName);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
-    private void sendToBase(String productName, String productPrice, String productInfo, String
-        URL, LoadingBar loadingBar) {
+    private void sendToBase() {
+        String productName = productTitle.getText().toString();
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UUID uniqueKey = UUID.randomUUID();
-                String key = String.valueOf(uniqueKey);
+                key = String.valueOf(uniqueKey);
                 if(!dataSnapshot.child("Products").child(key).exists()){
                     HashMap<String, Object> userHashMap= new HashMap<>();
                     userHashMap.put("productKey",key);
                     userHashMap.put("productOwnerName",currentUser.getName());
                     userHashMap.put("productName",productName);
-                    userHashMap.put("URL",URL);
-                    userHashMap.put("productPrice",productPrice);
-                    userHashMap.put("productInfo",productInfo);
+                    userHashMap.put("productPrice",productPrice.getText().toString());
+                    userHashMap.put("productInfo",productInfo.getText().toString());
                     userHashMap.put("productOwner",currentUser.getNumber());
                     rootRef.child("Products").child(String.valueOf(uniqueKey)).updateChildren(userHashMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -250,10 +253,9 @@ public class PublishProductFragment extends Fragment {
                     HashMap<String, Object> currentProductName = new HashMap<>();
                     currentProductName.put(String.valueOf(uniqueKey),String.valueOf(uniqueKey));
                     rootRef.child("Users").child(currentUser.getNumber()).child("UserProducts").updateChildren(currentProductName);
-                    loadingBar.dismiss();
                 }
                 else{
-                    loadingBar.dismiss();
+
                 }
             }
 
@@ -264,7 +266,7 @@ public class PublishProductFragment extends Fragment {
         });
     }
     private void setAdapter(){
-        ImagesAdapter imagesAdapter = new ImagesAdapter(this.getContext(),uriArrayList);
+        ImagesAdapter imagesAdapter = new ImagesAdapter(this.getContext(),uriArrayList,null);
         viewPager.setAdapter(imagesAdapter);
     }
 }

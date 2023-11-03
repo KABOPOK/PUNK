@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import ru.kabopok.punk_jv.R;
@@ -34,6 +37,7 @@ public class FavouriteProductsFragment extends Fragment {
     TextView title;
     List<Product> productList = new ArrayList<>();
     User currentUser = Online.getCurrentUser();
+    Boolean AdapterPrepared = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,7 +58,8 @@ public class FavouriteProductsFragment extends Fragment {
     }
 
     private void prepareAdapter() {
-        productAdapter = new ProductAdapter(productList, this.getContext(), this::selectedProduct);
+        productAdapter = new ProductAdapter(productList, this.getContext(), this::selectedProduct,
+                this::activateHeart, this::deactivateHeart);
         rvProducts.setAdapter(productAdapter);
     }
 
@@ -87,18 +92,72 @@ public class FavouriteProductsFragment extends Fragment {
         rootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(int i = 0; i < idOdProducts.size(); ++i){
-                    if(dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).exists()){
-                        Product product = dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).getValue(Product.class);
-                        productList.add(product);
+                if(!AdapterPrepared) {
+                    for (int i = 0; i < idOdProducts.size(); ++i) {
+                        if (dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).exists()) {
+                            Product product = dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).getValue(Product.class);
+                            ArrayList<String> photos = new ArrayList<>();
+                            for (DataSnapshot postSnapshotPhoto : dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).child("ProductPhotos").getChildren()) {
+                                photos.add(postSnapshotPhoto.getValue(String.class));
+                            }
+                            product.setImagesURLs(photos);
+                        } else {
+                            Task<Void> removeTask = rootRef.child("Products").child(idOdProducts.get(i).toString()).removeValue();
+                            removeTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+
+                                }
+                            });
+                        }
                     }
+                    prepareAdapter();
+                    AdapterPrepared=true;
                 }
-                prepareAdapter();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+    }
+    private void activateHeart(Product product){
+        addToFavourite(product);
+    }
+    private void deactivateHeart(Product product) {
+        removeFromFavourite(product);
+    }
+    private void addToFavourite(Product product) {
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.child("Users").child(currentUser.getNumber()).exists()){
+                    HashMap<String, Object> currentProductName = new HashMap<>();
+                    currentProductName.put(product.getProductKey(), product.getProductKey());
+                    rootRef.child("Users").child(currentUser.getNumber()).child("FavouriteProducts").updateChildren(currentProductName);
+                }
+                else{
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void removeFromFavourite(Product product) {
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getNumber()).child("FavouriteProducts").child(product.getProductKey());
+        Task<Void> removeTask = rootRef.removeValue();
+        removeTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                product.getProductOwner();
             }
         });
     }

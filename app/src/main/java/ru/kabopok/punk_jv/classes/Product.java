@@ -1,4 +1,8 @@
 package ru.kabopok.punk_jv.classes;
+
+import java.util.ArrayList;
+import java.util.Vector;
+
 public class Product {
 
     String productKey;
@@ -8,6 +12,8 @@ public class Product {
     String productPrice;
     String productInfo;
     String productOwner;
+
+    ArrayList<String> imagesURLs = new ArrayList<>();
     public Product(){
         this.URL = null;
         this.productKey = null;
@@ -16,6 +22,7 @@ public class Product {
         this.productPrice = null;
         this.productInfo = null;
         this.productOwner = null;
+        imagesURLs = null;
     }
 
     public Product(String productKey, String productOwnerName, String URL, String productName, String productPrice, String productInfo, String productOwner) {
@@ -28,6 +35,17 @@ public class Product {
         this.productOwner = productOwner;
     }
 
+    public String getOnePhoto(){
+        return imagesURLs.get(0);
+    }
+
+    public void setImagesURLs(ArrayList<String> imagesURLs){
+        this.imagesURLs = imagesURLs;
+    }
+
+    public ArrayList<String> getImagesURLs() {
+        return imagesURLs;
+    }
 
     public String getProductKey() {
         return productKey;

@@ -48,6 +48,7 @@ public class HomeFragment extends Fragment {
 
     User currentUser = Online.getCurrentUser();
 
+    Boolean AdapterPrepared = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,7 +90,7 @@ public class HomeFragment extends Fragment {
     private void prepareRV() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(),LinearLayoutManager.VERTICAL,false);
         rvProducts.setLayoutManager(linearLayoutManager);
-        prepareAdapter();
+        //prepareAdapter();
     }
 
     private void prepareAdapter() {
@@ -114,23 +115,21 @@ public class HomeFragment extends Fragment {
     private void setData() {
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
-        final boolean[] alreadyHave = {false};
         rootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.child("Products").getChildren()) {
-                    Product product = postSnapshot.getValue(Product.class);
-                    for(int i =0; i < productList.size(); ++i){
-                        if(productList.get(i).getProductKey() == product.getProductKey()){
-                            alreadyHave[0] = true;
+                if(!AdapterPrepared) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.child("Products").getChildren()) {
+                        ArrayList<String> photos = new ArrayList<>();
+                        for (DataSnapshot postSnapshotPhoto : postSnapshot.child("ProductPhotos").getChildren()) {
+                            photos.add(postSnapshotPhoto.getValue(String.class));
                         }
-                    }
-                    if(!alreadyHave[0]) {
+                        Product product = postSnapshot.getValue(Product.class);
+                        product.setImagesURLs(photos);
                         productList.add(product);
                     }
-                }
-                if(!alreadyHave[0]) {
                     prepareAdapter();
+                    AdapterPrepared=true;
                 }
             }
 
