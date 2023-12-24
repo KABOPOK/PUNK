@@ -46,7 +46,7 @@
         android:layout_marginTop="500dp"
         android:textColor="@color/white"
         android:layout_marginRight="25dp"
-        android:hint="пол"
+        android:hint="Telegramm @ID"
         android:inputType="textPersonName"
         android:padding="15dp" />
 

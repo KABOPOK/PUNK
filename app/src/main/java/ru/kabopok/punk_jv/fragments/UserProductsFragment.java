@@ -26,6 +26,7 @@ import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.activities.ProductActivity;
 import ru.kabopok.punk_jv.activities.ProfileActivity;
 import ru.kabopok.punk_jv.activities.UserProductsActivity;
+import ru.kabopok.punk_jv.classes.Photo;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.ProductAdapter;
 import ru.kabopok.punk_jv.classes.User;
@@ -97,8 +98,10 @@ public class UserProductsFragment extends Fragment {
                         if (dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).exists()) {
                             Product product = dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).getValue(Product.class);
                             ArrayList<String> photos = new ArrayList<>();
-                            for (DataSnapshot postSnapshotPhoto : dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).child("ProductPhotos").getChildren()) {
-                                photos.add(postSnapshotPhoto.getValue(String.class));
+                            for (DataSnapshot postSnapshotPhoto : dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).child("images").getChildren()) {
+                                Photo photo = postSnapshotPhoto.getValue(Photo.class);
+                                photos.add(photo.getURL());
+                                product.pushImagesPath(photo.getCloudPath());
                             }
                             product.setImagesURLs(photos);
                             productList.add(product);

@@ -7,7 +7,8 @@ public class Product {
 
     String productKey;
     String productOwnerName;
-    String URL;
+    Photo photo;
+    ArrayList<String> pathImages = new ArrayList<>();
     String productName;
     String productPrice;
     String productInfo;
@@ -15,26 +16,30 @@ public class Product {
 
     ArrayList<String> imagesURLs = new ArrayList<>();
     public Product(){
-        this.URL = null;
+        this.photo = null;
         this.productKey = null;
         this.productOwnerName = null;
         this.productName = null;
         this.productPrice = null;
         this.productInfo = null;
         this.productOwner = null;
-        imagesURLs = null;
     }
 
-    public Product(String productKey, String productOwnerName, String URL, String productName, String productPrice, String productInfo, String productOwner) {
+    public Product(String productKey, String productOwnerName, String URL, String productName, String productPrice, String productInfo, String productOwner, Photo photo) {
         this.productKey = productKey;
         this.productOwnerName = productOwnerName;
-        this.URL = URL;
+        this.photo = photo;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productInfo = productInfo;
         this.productOwner = productOwner;
     }
-
+    public void pushImagesPath(String X){
+        pathImages.add(X);
+    }
+    public ArrayList<String> getImagesPathList(){
+        return pathImages;
+    }
     public String getOnePhoto(){
         return imagesURLs.get(0);
     }
@@ -63,12 +68,15 @@ public class Product {
         this.productOwnerName = productOwnerName;
     }
 
-    public String getURL() {
-        return URL;
+    public Photo getPhoto() {
+        return photo;
     }
 
-    public void setURL(String URL) {
-        this.URL = URL;
+    public void setURL(String URL){this.photo.setURL(URL);}
+    public String getURL(String URL){return photo.getURL();}
+
+    public void setPhoto(String URL) {
+        this.photo = photo;
     }
 
     public String getProductName() {
@@ -103,8 +111,8 @@ public class Product {
         this.productOwner = productOwner;
     }
 
-    public Product(String imgPath, String productName, String productPrice, String productInfo, String productOwner) {
-        this.URL = imgPath;
+    public Product(Photo photo, String productName, String productPrice, String productInfo, String productOwner) {
+        this.photo = photo;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productInfo = productInfo;

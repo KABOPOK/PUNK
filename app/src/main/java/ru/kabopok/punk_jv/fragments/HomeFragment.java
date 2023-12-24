@@ -23,6 +23,7 @@ import ru.kabopok.punk_jv.activities.HomeActivity;
 import ru.kabopok.punk_jv.activities.ProductActivity;
 import ru.kabopok.punk_jv.activities.ProfileActivity;
 import ru.kabopok.punk_jv.classes.LoadingBar;
+import ru.kabopok.punk_jv.classes.Photo;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.ProductAdapter;
 import ru.kabopok.punk_jv.classes.User;
@@ -121,8 +122,9 @@ public class HomeFragment extends Fragment {
                 if(!AdapterPrepared) {
                     for (DataSnapshot postSnapshot : dataSnapshot.child("Products").getChildren()) {
                         ArrayList<String> photos = new ArrayList<>();
-                        for (DataSnapshot postSnapshotPhoto : postSnapshot.child("ProductPhotos").getChildren()) {
-                            photos.add(postSnapshotPhoto.getValue(String.class));
+                        for (DataSnapshot postSnapshotPhoto : postSnapshot.child("images").getChildren()) {
+                            Photo photo = postSnapshotPhoto.getValue(Photo.class);
+                            photos.add(photo.getURL());
                         }
                         Product product = postSnapshot.getValue(Product.class);
                         product.setImagesURLs(photos);
@@ -145,7 +147,6 @@ public class HomeFragment extends Fragment {
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 if(dataSnapshot.child("Users").child(currentUser.getNumber()).exists()){
                     HashMap<String, Object> currentProductName = new HashMap<>();
                     currentProductName.put(product.getProductKey(), product.getProductKey());

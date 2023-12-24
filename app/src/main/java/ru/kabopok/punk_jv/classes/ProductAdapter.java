@@ -1,5 +1,6 @@
 package ru.kabopok.punk_jv.classes;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +18,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.varunest.sparkbutton.SparkButton;
 import com.varunest.sparkbutton.SparkEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.current.Online;
@@ -101,7 +105,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductAdapterVh holder, int position) {
+    public void onBindViewHolder(@NonNull ProductAdapterVh holder, @SuppressLint("RecyclerView") int position) {
         Product product = productList.get(position);
         holder.row_name.setText(product.getProductName());
         holder.row_price.setText(product.getProductPrice());
@@ -168,7 +172,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         removeTask.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-
+                final StorageReference storeRef = FirebaseStorage.getInstance().getReference();
+                ArrayList<String> photos = product.getImagesPathList();
+                for(int i =0; i < photos.size(); ++i) {
+                    StorageReference reference = storeRef.child(photos.get(i));
+                    reference.delete();
+                }
             }
         });
     }

@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,9 +111,11 @@ public class PublishProductFragment extends Fragment {
             }
         });
         PushProduct.setOnClickListener(v -> {
-            loadingBar.show();
-            sendToBase();
-            uploadImgWithCompress(loadingBar);
+            if(CorrectData()) {
+                loadingBar.show();
+                sendToBase();
+                uploadImgWithCompress(loadingBar);
+            }
         });
         return view;
     }
@@ -167,7 +170,6 @@ public class PublishProductFragment extends Fragment {
             }
         }
     }
-
     private void uploadImgWithCompress(LoadingBar loadingBar){
         for(int i =0;  i < uriArrayList.size(); ++i) {
             uriOfImg = uriArrayList.get(i);
@@ -181,7 +183,8 @@ public class PublishProductFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+            String path = "images/" + UUID.randomUUID().toString();
+            StorageReference ref = storageReference.child( path);
             ref.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -191,9 +194,9 @@ public class PublishProductFragment extends Fragment {
                         @Override
                         public void onSuccess(Uri uri) {
                             imgUrl = uri.toString();
-                            addPhoto(imgUrl,String.valueOf(counter));
+                            addPhoto(imgUrl, path);
                             ++counter;
-                            if(counter >= uriArrayList.size()-1){
+                            if(counter >= uriArrayList.size()){
                                 loadingBar.dismiss();
                                 counter=0;
                             }
@@ -203,18 +206,22 @@ public class PublishProductFragment extends Fragment {
             });
         }
     }
-
-    private void addPhoto(String imgUrl, String counter) {
+    private void addPhoto(String imgUrl, String path) {
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                HashMap<String, Object> currentProductName = new HashMap<>();
-                currentProductName.put(counter,imgUrl);
-                rootRef.child("Products").child(key).child("ProductPhotos").updateChildren(currentProductName);
-            }
+                HashMap<String, Object> photoHashMap= new HashMap<>();
+                photoHashMap.put("cloudPath",path);
+                photoHashMap.put("URL",imgUrl);
+                rootRef.child("Products").child(key).child(path).updateChildren(photoHashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
 
+                    }
+                });
+            }
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -268,5 +275,12 @@ public class PublishProductFragment extends Fragment {
     private void setAdapter(){
         ImagesAdapter imagesAdapter = new ImagesAdapter(this.getContext(),uriArrayList,null);
         viewPager.setAdapter(imagesAdapter);
+    }
+
+    private boolean CorrectData(){
+        if(uriArrayList.size() == 0){Toast.makeText(this.getContext(),"без фоточки нельзя!!!",Toast.LENGTH_SHORT).show();return false;}
+        if(TextUtils.isEmpty(productTitle.getText())){Toast.makeText(this.getContext(),"что/кого ты продаёшь?",Toast.LENGTH_SHORT).show(); return false;}
+        if(TextUtils.isEmpty(productPrice.getText())){Toast.makeText(this.getContext(),"почём эта шафка?",Toast.LENGTH_SHORT).show(); return false;}
+        return true;
     }
 }

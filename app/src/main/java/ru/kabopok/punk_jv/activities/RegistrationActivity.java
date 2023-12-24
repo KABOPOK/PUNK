@@ -9,9 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -48,7 +50,7 @@ public class RegistrationActivity extends AppCompatActivity {
     final LoadingBar loadingBar = new LoadingBar(RegistrationActivity.this);
     private CheckBox checkBox;
     private ImageView photoUser;
-    private Uri photoUserUri;
+    private Uri photoUserUri = null;
     private Button createUser;
     private EditText nameData;
     StorageReference storageReference;
@@ -56,20 +58,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText genderData;
     private EditText numberData;
     private EditText passwordData;
-
-//    public final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-//        @Override
-//        public void onActivityResult(ActivityResult result) {
-//            if (result.getResultCode() == RESULT_OK) {
-//                if (result.getData() != null) {
-//                    photoUserUri = result.getData().getData();
-//                    Glide.with(getApplicationContext()).load(photoUserUri).into(photoUser);
-//                }
-//            } else {
-//                Toast.makeText(RegistrationActivity.this, "Выбири свою лучшую фоточку", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +76,6 @@ public class RegistrationActivity extends AppCompatActivity {
         photoUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(Intent.ACTION_PICK);
-//                intent.setType("image/*");
-//                activityResultLauncher.launch(intent);
                 startCropActivity();
             }
         });
@@ -99,6 +84,11 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(checkBox.isChecked()){
                     loadingBar.show();
+                    if(photoUserUri == null){
+                        int resID = getResources().getIdentifier("default_photo.png", "drawable", getApplicationContext().getPackageName());
+                        photoUser.setImageResource(resID);
+                        photoUserUri = Uri.parse("android.resource://"+getPackageName()+"/drawable/default_photo.jpg");
+                    }
                     uploadImgWithCompress();
                 }
                 else{
@@ -167,17 +157,6 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
 
-    private void createAccount() {
-        String name = nameData.getText().toString();
-        String gender = genderData.getText().toString();
-        String number = numberData.getText().toString();
-        String password = passwordData.getText().toString();
-        //check correct of data
-        //..
-        //end
-       // sendToBase(name, gender, number, password);
-    }
-
     private void sendToBase(String name, String gender, String number, String password, String imgUrl) {
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -198,7 +177,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        Toast.makeText(RegistrationActivity.this, " Твоя попка в базе ->" + number, Toast.LENGTH_LONG).show();
+                                        Toast.makeText(RegistrationActivity.this, "Зарегано ->" + number, Toast.LENGTH_LONG).show();
                                         Intent regIntent = new Intent(RegistrationActivity.this, MainActivity.class);
                                         startActivity(regIntent);
                                     }
@@ -224,5 +203,12 @@ public class RegistrationActivity extends AppCompatActivity {
 
             }
         });
+    }
+    private boolean CorrectData(){
+        if(TextUtils.isEmpty(nameData.getText())){Toast.makeText(this,"Как тебя называют",Toast.LENGTH_SHORT).show(); return false;}
+        if(TextUtils.isEmpty(passwordData.getText())){Toast.makeText(this,"мне плохо, меня Таня бросила, а ты пароль не ввел",Toast.LENGTH_SHORT).show(); return false;}
+        if(TextUtils.isEmpty(numberData.getText())){Toast.makeText(this,"эй девушка, телефонъчик скиньте",Toast.LENGTH_SHORT).show(); return false;}
+        if(TextUtils.isEmpty(genderData.getText())){Toast.makeText(this,"@token - VK/Telegram",Toast.LENGTH_SHORT).show(); return false;}
+        return true;
     }
 }

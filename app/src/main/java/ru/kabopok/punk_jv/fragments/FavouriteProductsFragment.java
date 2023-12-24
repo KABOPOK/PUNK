@@ -26,6 +26,7 @@ import java.util.List;
 
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.activities.ProductActivity;
+import ru.kabopok.punk_jv.classes.Photo;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.ProductAdapter;
 import ru.kabopok.punk_jv.classes.User;
@@ -54,21 +55,17 @@ public class FavouriteProductsFragment extends Fragment {
     private void prepareRV() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(),LinearLayoutManager.VERTICAL,false);
         rvProducts.setLayoutManager(linearLayoutManager);
-        prepareAdapter();
     }
-
     private void prepareAdapter() {
         productAdapter = new ProductAdapter(productList, this.getContext(), this::selectedProduct,
                 this::activateHeart, this::deactivateHeart);
         rvProducts.setAdapter(productAdapter);
     }
-
     private void selectedProduct(Product product) {
         Online.setCurrentProduct(product);
         Intent productIntent = new Intent(this.getContext(), ProductActivity.class);
         startActivity(productIntent);
     }
-
     private void setData() {
         List idOdProducts = new ArrayList<String>();
         final DatabaseReference rootRef;
@@ -97,12 +94,15 @@ public class FavouriteProductsFragment extends Fragment {
                         if (dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).exists()) {
                             Product product = dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).getValue(Product.class);
                             ArrayList<String> photos = new ArrayList<>();
-                            for (DataSnapshot postSnapshotPhoto : dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).child("ProductPhotos").getChildren()) {
-                                photos.add(postSnapshotPhoto.getValue(String.class));
+                            for (DataSnapshot postSnapshotPhoto : dataSnapshot.child("Products").child(idOdProducts.get(i).toString()).child("images").getChildren()) {
+                                Photo photo = postSnapshotPhoto.getValue(Photo.class);
+                                photos.add(photo.getURL());
                             }
                             product.setImagesURLs(photos);
-                        } else {
-                            Task<Void> removeTask = rootRef.child("Products").child(idOdProducts.get(i).toString()).removeValue();
+                            productList.add(product);
+                        }
+                        else {
+                            Task<Void> removeTask = rootRef.child("Users").child(currentUser.getNumber()).child("FavouriteProducts").child(idOdProducts.get(i).toString()).removeValue();
                             removeTask.addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {

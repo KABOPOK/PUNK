@@ -7,72 +7,115 @@
     android:background="@color/strangeBlack"
     tools:context=".activities.ProductActivity">
 
-    <ImageView
-        android:id="@+id/userProfilePhoto_ImageView"
-        android:layout_width="366dp"
-        android:layout_height="311dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/strangeLowBlack"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/nameOfUser_TextView"
-        android:layout_width="276dp"
-        android:layout_height="53dp"
-        android:textColor="@color/white"
-        android:background="@color/strangeLowBlack"
-        android:textAlignment="center"
-        android:layout_marginTop="28dp"
-        android:textSize="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userProfilePhoto_ImageView" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="322dp"
+            android:layout_height="555dp"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.278">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:background="@color/strangeLowBlack"
+                android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/genderOfUser_TextView"
-        android:layout_width="276dp"
-        android:textAlignment="center"
-        android:layout_height="53dp"
-        android:layout_marginTop="28dp"
-        android:textColor="@color/white"
-        android:background="@color/strangeLowBlack"
-        android:textSize="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameOfUser_TextView" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userProfilePhoto_ImageView"
+                    android:layout_width="281dp"
+                    android:layout_height="254dp"
+                    android:layout_marginTop="28dp"
+                    android:background="@color/strangeLowBlack"
+                    android:src="@drawable/vector_ic_profile"
+                    app:civ_border_color="@color/strangeYellow"
+                    app:civ_border_width="3dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.609"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@drawable/ic_photo" />
 
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="123dp"
+                    android:layout_height="34dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/strangeLowBlack"
+                    android:text="имя"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userProfilePhoto_ImageView" />
 
-    <TextView
-        android:id="@+id/numberOfUser_TextView"
-        android:layout_width="276dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="28dp"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:background="@color/strangeLowBlack"
-        android:textSize="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/genderOfUser_TextView" />
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="123dp"
+                    android:layout_height="34dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/strangeLowBlack"
+                    android:text="номер"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <Button
-        android:id="@+id/toProfileUser_Button"
-        android:layout_width="342dp"
-        android:layout_height="64dp"
-        android:backgroundTint="@color/strangeLowBlack"
-        android:layout_marginBottom="20dp"
-        android:text="вау, хочу подкатить"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numberOfUser_TextView"
-        app:layout_constraintVertical_bias="0.605" />
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="123dp"
+                    android:layout_height="34dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/strangeLowBlack"
+                    android:text="Telegramm"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    app:layout_constraintVertical_bias="0.074" />
+
+                <TextView
+                    android:id="@+id/nameOfUser_TextView"
+                    android:layout_width="148dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userProfilePhoto_ImageView" />
+
+                <TextView
+                    android:id="@+id/numberOfUser_TextView"
+                    android:layout_width="148dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nameOfUser_TextView" />
+
+                <TextView
+                    android:id="@+id/genderOfUser_TextView"
+                    android:layout_width="148dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/numberOfUser_TextView" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

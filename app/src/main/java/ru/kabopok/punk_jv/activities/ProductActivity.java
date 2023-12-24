@@ -21,6 +21,7 @@ public class ProductActivity extends AppCompatActivity {
 
     ViewPager viewPager;
     TextView nameOfUser;
+    TextView ownerProductName;
     TextView priceOfProduct;
     TextView productInfo;
     Button toUserProfileButton;
@@ -31,11 +32,13 @@ public class ProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
         viewPager = findViewById(R.id.images_ViewPager);
+        ownerProductName = findViewById(R.id.ownerProductName_TextView);
         nameOfUser = findViewById(R.id.nameOfProduct_TextView);
         priceOfProduct = findViewById(R.id.priceOfProduct_TextView);
         productInfo = findViewById(R.id.infoOfProduct_TextView);
         toUserProfileButton = findViewById(R.id.toProfileUser_Button);
         nameOfUser.setText(currentProduct.getProductName());
+        ownerProductName.setText(currentProduct.getProductOwnerName());
         priceOfProduct.setText(currentProduct.getProductPrice());
         productInfo.setText(currentProduct.getProductInfo());
         setAdapter();

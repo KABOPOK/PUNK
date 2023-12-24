@@ -69,23 +69,25 @@
                 android:layout_height="25dp"
                 android:layout_marginStart="156dp"
                 android:layout_marginTop="68dp"
-                android:text="Продаватель"
+                android:text="Владелец"
+                android:gravity="center"
                 android:background="@color/strangeLowBlack"
                 android:textSize="12sp"
-                android:textColor="@color/strangeYellow"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="90dp"
+                android:gravity="center"
                 android:layout_height="25dp"
                 android:layout_marginStart="156dp"
                 android:layout_marginTop="8dp"
                 android:background="@color/strangeLowBlack"
                 android:text="стоимость"
                 android:textSize="12sp"
-                android:textColor="@color/strangeYellow"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -94,9 +96,10 @@
                 android:layout_height="25dp"
                 android:layout_marginStart="156dp"
                 android:text="проблемки"
+                android:gravity="center"
                 android:background="@color/strangeLowBlack"
                 android:textSize="12sp"
-                android:textColor="@color/strangeYellow"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
@@ -104,7 +107,7 @@
 
             <TextView
                 android:id="@+id/row_userName_TextView"
-                android:layout_width="116dp"
+                android:layout_width="80dp"
                 android:layout_height="25dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="68dp"
@@ -122,13 +125,13 @@
 
             <TextView
                 android:id="@+id/row_productPrice_TextView"
-                android:layout_width="116dp"
+                android:layout_width="80dp"
                 android:layout_height="25dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="109dp"
                 android:layout_marginTop="35dp"
-                android:background="@color/strangeLowBlack"
                 android:layout_marginBottom="116dp"
+                android:background="@color/strangeLowBlack"
                 android:gravity="center"
                 android:text="price"
                 android:textColor="@color/white"
@@ -136,7 +139,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.333"
+                app:layout_constraintHorizontal_bias="0.844"
                 app:layout_constraintStart_toEndOf="@+id/row_image_ImageView"
                 app:layout_constraintTop_toTopOf="@+id/row_userName_TextView"
                 app:layout_constraintVertical_bias="0.0" />
