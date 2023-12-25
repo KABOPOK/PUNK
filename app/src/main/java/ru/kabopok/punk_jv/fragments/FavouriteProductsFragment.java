@@ -46,7 +46,7 @@ public class FavouriteProductsFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_favourite_products, container, false);
         title = view.findViewById(R.id.title_TextView);
         rvProducts = view.findViewById(R.id.rvUserProducts);
-        title.setText("ну, типо, твои товары");
+        title.setText("эти штучки тебе нравятся");
         setData();
         prepareRV();
 

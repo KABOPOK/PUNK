@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class HomeFragment extends Fragment {
         rvProducts = view.findViewById(R.id.rvProducts);
         searchView = view.findViewById(R.id.searchView);
         searchView.clearFocus();
+        searchView.setQueryHint(Html.fromHtml("<font color = #7A7A7A>" + "find" + "</font>"));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

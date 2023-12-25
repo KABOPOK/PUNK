@@ -111,8 +111,8 @@ public class PublishProductFragment extends Fragment {
             }
         });
         PushProduct.setOnClickListener(v -> {
+            loadingBar.show();
             if(CorrectData()) {
-                loadingBar.show();
                 sendToBase();
                 uploadImgWithCompress(loadingBar);
             }
@@ -160,7 +160,7 @@ public class PublishProductFragment extends Fragment {
             if(data != null) {
                 if (data.getClipData() != null) {
                     int x = data.getClipData().getItemCount();
-                    for (int i = 0; i < x; i++) {
+                    for (int i = 0; i < x; ++i) {
                         uriArrayList.add(data.getClipData().getItemAt(i).getUri());
                     }
                 } else if (data.getData() != null) {
@@ -197,7 +197,6 @@ public class PublishProductFragment extends Fragment {
                             addPhoto(imgUrl, path);
                             ++counter;
                             if(counter >= uriArrayList.size()){
-                                loadingBar.dismiss();
                                 counter=0;
                             }
                         }

@@ -32,13 +32,15 @@
         android:layout_marginRight="25dp"
         android:background="@color/strangeLowBlack"
         android:textColorHint="@color/hintColor"
-        android:hint="имя"
+        android:hint="Имя"
+        android:textCursorDrawable="@drawable/custon_cursor"
         android:inputType="textPersonName"
         android:padding="15dp" />
 
     <EditText
         android:id="@+id/create_gender"
         android:layout_width="match_parent"
+        android:textCursorDrawable="@drawable/custon_cursor"
         android:layout_height="wrap_content"
         android:background="@color/strangeLowBlack"
         android:layout_marginLeft="25dp"
@@ -54,13 +56,14 @@
         android:id="@+id/create_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textCursorDrawable="@drawable/custon_cursor"
         android:background="@color/strangeLowBlack"
         android:textColorHint="@color/hintColor"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="435dp"
         android:layout_marginRight="25dp"
         android:textColor="@color/white"
-        android:hint="телефон"
+        android:hint="Номер"
         android:inputType="phone"
         android:padding="15dp" />
 
@@ -70,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="370dp"
+        android:textCursorDrawable="@drawable/custon_cursor"
         android:textColor="@color/white"
         android:background="@color/strangeLowBlack"
         android:layout_marginRight="25dp"

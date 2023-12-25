@@ -2,25 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:icon="@drawable/vector_ic_home"
-        android:title="home"
+        android:title="ПУНК"
         android:id="@+id/home"/>
     <item
         android:id="@+id/favourite_menu"
-        android:title="favourite"
+        android:title="Демидович"
         android:icon="@drawable/vector_ic_favourite"/>
     <item
         android:id="@+id/pushProduct_menu"
-        android:title="publish product"
+        android:title="продать"
         android:icon="@drawable/ic_vector_publish"
         />
     <item
         android:id="@+id/cart_menu"
-        android:title="my products"
+        android:title="мой товары"
         android:icon="@drawable/vector_ic_cart"
         />
     <item
         android:id="@+id/profile_menu"
-        android:title="profile"
+        android:title="профиль"
         android:icon="@drawable/vector_ic_profile"
         />
 </menu>
