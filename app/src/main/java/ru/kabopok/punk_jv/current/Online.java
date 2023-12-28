@@ -1,5 +1,7 @@
 package ru.kabopok.punk_jv.current;
 
+import com.google.firebase.database.core.view.Change;
+
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.User;
 
@@ -21,5 +23,9 @@ public class Online {
     }
     public static User getCurrentUser() {
         return CurrentUser;
+    }
+    public static void ChangePhotoData(String URL, String path){
+        CurrentUser.setPhotoUserUrl(URL);
+        CurrentUser.setPhotoUserCloudPath(path);
     }
 }

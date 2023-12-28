@@ -58,6 +58,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText genderData;
     private EditText numberData;
     private EditText passwordData;
+    String photoUserCloudPath = "images/" + UUID.randomUUID().toString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +118,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
-    private void startCropActivity(){
+    public void startCropActivity(){
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .start(this);
@@ -132,8 +133,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }catch (IOException e){
             e.printStackTrace();
         }
-
-        StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+        StorageReference ref = storageReference.child(photoUserCloudPath);
         ref.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -164,7 +164,6 @@ public class RegistrationActivity extends AppCompatActivity {
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                long count = dataSnapshot.child("Users").getChildrenCount();
                 if(!dataSnapshot.child("Users").child(number).exists()){
                     HashMap<String, Object> userHashMap = new HashMap<>();
                     userHashMap.put("name",name);
@@ -172,6 +171,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     userHashMap.put("gender",gender);
                     userHashMap.put("password",password);
                     userHashMap.put("photoUserUrl", imgUrl);
+                    userHashMap.put("photoUserCloudPath", photoUserCloudPath);
                     rootRef.child("Users").child(number).updateChildren(userHashMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

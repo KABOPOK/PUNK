@@ -2,6 +2,7 @@ package ru.kabopok.punk_jv.classes;
 
 public class User {
     private String photoUserUrl;
+    private String photoUserCloudPath;
     private String name;
     private String gender;
     private String number;
@@ -12,8 +13,16 @@ public class User {
         number =null;
         password =null;
         photoUserUrl =null;
+        photoUserCloudPath = null;
     }
 
+    public String getPhotoUserCloudPath() {
+        return photoUserCloudPath;
+    }
+
+    public void setPhotoUserCloudPath(String photoUserCloudPath) {
+        this.photoUserCloudPath = photoUserCloudPath;
+    }
 
     public User(String name, String gender, String number, String password, String photoUserUrl) {
         this.name = name;

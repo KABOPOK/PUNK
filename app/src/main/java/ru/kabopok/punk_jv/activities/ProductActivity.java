@@ -3,8 +3,11 @@ package ru.kabopok.punk_jv.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,8 +15,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import ru.kabopok.punk_jv.R;
-import ru.kabopok.punk_jv.classes.ImagesAdapter;
-import ru.kabopok.punk_jv.classes.LoadingBar;
+import ru.kabopok.punk_jv.classes.ViewPagerAdapter;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.current.Online;
 
@@ -49,7 +51,23 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void setAdapter(){
-        ImagesAdapter imagesAdapter = new ImagesAdapter(this,null,currentProduct.getImagesURLs());
-        viewPager.setAdapter(imagesAdapter);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,null,currentProduct.getImagesURLs(),null, this::zoomPicture);
+        viewPager.setAdapter(viewPagerAdapter);
+    }
+    private void zoomPicture(String URL){
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.custom_dialog_zoom);
+        ImageView img  = dialog.findViewById(R.id.custom_image_dialog);
+        Button closeDialog = dialog.findViewById(R.id.custom_button_dialog);
+        //Or this one instead:
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        Picasso.with(this).load(URL).into(img);
+        closeDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }

@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.squareup.picasso.Picasso;
@@ -19,18 +18,22 @@ import java.util.Objects;
 
 import ru.kabopok.punk_jv.R;
 
-public class ImagesAdapter extends PagerAdapter {
+public class ViewPagerAdapter extends PagerAdapter {
 
     Context context;
     ArrayList<Uri> imagesUris;
     ArrayList<String> imagesURLs;
     LayoutInflater layoutInflater;
+    ItemClickListener itemClickListener;
+    ItemClickListenerURL itemClickListenerURL;
 
-    public ImagesAdapter(Context context,ArrayList<Uri> imagesUris,ArrayList<String> imagesURLs) {
+    public ViewPagerAdapter(Context context, ArrayList<Uri> imagesUris, ArrayList<String> imagesURLs, ItemClickListener itemClickListener,ItemClickListenerURL itemClickListenerURL ) {
         this.context = context;
         this.imagesUris = imagesUris;
         this.layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         this.imagesURLs = imagesURLs;
+        this.itemClickListener = itemClickListener;
+        this.itemClickListenerURL = itemClickListenerURL;
     }
 
     @Override
@@ -57,6 +60,19 @@ public class ImagesAdapter extends PagerAdapter {
             text.setText(String.valueOf(position+1) + "/" + String.valueOf(imagesURLs.size()));
         }
         Objects.requireNonNull(container).addView(view);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(imagesUris != null) {
+                    itemClickListener.ItemClick(imagesUris.get(position));
+                }
+                else{
+                    itemClickListenerURL.ItemClick(imagesURLs.get(position));
+                }
+            }
+        });
+
         return view;
     }
 
@@ -68,5 +84,12 @@ public class ImagesAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         //container.removeView((ConstraintLayout)object);
+    }
+
+    public interface ItemClickListener{
+        void ItemClick(Uri img);
+    }
+    public interface ItemClickListenerURL{
+        void ItemClick(String URL);
     }
 }
