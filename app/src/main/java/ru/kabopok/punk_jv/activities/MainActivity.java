@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -45,8 +46,10 @@ public class MainActivity extends AppCompatActivity {
 
     final LoadingBar loadingBar = new LoadingBar(MainActivity.this);
     private CheckBox rememberUser;
-
     private TextView punkText;
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String NUMBER = "number";
+    public static final String PASSWORD = "password";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,13 +64,11 @@ public class MainActivity extends AppCompatActivity {
         Typeface typeface = Typeface.create("sans-serif", Typeface.NORMAL);
         punkText.setTypeface(typeface);
         inputButton.setOnClickListener((v) -> {
-            Paper.init(this);
-            String rememberPhone = Paper.book().read(Online.UserPhoneKey);
-            String rememberPassword = Paper.book().read(Online.UserPasswordKey);
-            if (rememberPhone != "" && rememberPassword != "" &&
-                    !TextUtils.isEmpty(rememberPhone) && !TextUtils.isEmpty(rememberPassword)) {
-                chekInBase(rememberPhone, rememberPassword);
-
+            SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            String number = sharedPreferences.getString(NUMBER, "");
+            String password = sharedPreferences.getString(PASSWORD, "");
+            if (number.length()!=0) {
+                chekInBase(number,password);
             }
             else {
                 Intent inputIntent = new Intent(MainActivity.this, InputActivity.class);

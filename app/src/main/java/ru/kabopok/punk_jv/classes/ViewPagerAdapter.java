@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,15 +26,13 @@ public class ViewPagerAdapter extends PagerAdapter {
     ArrayList<String> imagesURLs;
     LayoutInflater layoutInflater;
     ItemClickListener itemClickListener;
-    ItemClickListenerURL itemClickListenerURL;
 
-    public ViewPagerAdapter(Context context, ArrayList<Uri> imagesUris, ArrayList<String> imagesURLs, ItemClickListener itemClickListener,ItemClickListenerURL itemClickListenerURL ) {
+    public ViewPagerAdapter(Context context, ArrayList<Uri> imagesUris, ArrayList<String> imagesURLs, ItemClickListener itemClickListener) {
         this.context = context;
         this.imagesUris = imagesUris;
         this.layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         this.imagesURLs = imagesURLs;
         this.itemClickListener = itemClickListener;
-        this.itemClickListenerURL = itemClickListenerURL;
     }
 
     @Override
@@ -52,11 +51,11 @@ public class ViewPagerAdapter extends PagerAdapter {
         ImageView imageView = view.findViewById(R.id.custom_image_ImageView);
         text = view.findViewById(R.id.text);
         if(imagesUris != null) {
-            imageView.setImageURI(imagesUris.get(position));
+            Glide.with(context).load(imagesUris.get(position)).into(imageView);
             text.setText(String.valueOf(position+1) + "/" + String.valueOf(imagesUris.size()));
         }
         else{
-            Picasso.with(context).load(imagesURLs.get(position)).into(imageView);
+            Glide.with(context).load(imagesURLs.get(position)).into(imageView);
             text.setText(String.valueOf(position+1) + "/" + String.valueOf(imagesURLs.size()));
         }
         Objects.requireNonNull(container).addView(view);
@@ -64,11 +63,8 @@ public class ViewPagerAdapter extends PagerAdapter {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(imagesUris != null) {
-                    itemClickListener.ItemClick(imagesUris.get(position));
-                }
-                else{
-                    itemClickListenerURL.ItemClick(imagesURLs.get(position));
+                if(itemClickListener != null) {
+                    itemClickListener.ItemClick();
                 }
             }
         });
@@ -87,9 +83,6 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     public interface ItemClickListener{
-        void ItemClick(Uri img);
-    }
-    public interface ItemClickListenerURL{
-        void ItemClick(String URL);
+        void ItemClick();
     }
 }

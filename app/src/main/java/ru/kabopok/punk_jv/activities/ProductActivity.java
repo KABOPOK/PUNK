@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,7 +29,6 @@ public class ProductActivity extends AppCompatActivity {
     TextView productInfo;
     Button toUserProfileButton;
     Product currentProduct = Online.getCurrentProduct();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,17 +51,21 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void setAdapter(){
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,null,currentProduct.getImagesURLs(),null, this::zoomPicture);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,null,currentProduct.getImagesURLs(), this::zoomPicture);
         viewPager.setAdapter(viewPagerAdapter);
     }
-    private void zoomPicture(String URL){
+    private void zoomPicture(){
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.custom_dialog_zoom);
-        ImageView img  = dialog.findViewById(R.id.custom_image_dialog);
+        ViewPager pager  = dialog.findViewById(R.id.custom_ViewPager_dialog);
+
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,null,currentProduct.getImagesURLs(),null);
+        pager.setAdapter(viewPagerAdapter);
+
         Button closeDialog = dialog.findViewById(R.id.custom_button_dialog);
         //Or this one instead:
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        Picasso.with(this).load(URL).into(img);
+        //img.setImageURI(photo);
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

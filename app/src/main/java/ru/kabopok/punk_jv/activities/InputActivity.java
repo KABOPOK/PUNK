@@ -3,6 +3,7 @@ package ru.kabopok.punk_jv.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,6 +18,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import io.paperdb.Paper;
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.classes.LoadingBar;
@@ -28,7 +32,9 @@ public class InputActivity extends AppCompatActivity {
     private Button inputButton;
     private EditText numberData;
     private EditText passwordData;
-
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String NUMBER = "number";
+    public static final String PASSWORD = "password";
     final LoadingBar loadingBar = new LoadingBar(InputActivity.this);
     private CheckBox rememberUser;
     @Override
@@ -53,10 +59,12 @@ public class InputActivity extends AppCompatActivity {
     private void InToApp() {
         String number = numberData.getText().toString();
         String password = passwordData.getText().toString();
-        chekInBase(number, password);
+        if(number.length()!=0 && password.length()!=0) {
+            checkInBase(number, password);
+        }
     }
 
-    private void chekInBase(String number, String password) {
+    private void checkInBase(String number, String password) {
 
         loadingBar.show();
 
@@ -71,14 +79,20 @@ public class InputActivity extends AppCompatActivity {
                     if(user.getPassword().equals(password)){
                         Online.setCurrentUser(user);
                         if(rememberUser.isChecked()){
-                            Paper.book().destroy();
-                            Paper.book().write(Online.UserPhoneKey, number);
-                            Paper.book().write(Online.UserPasswordKey, password);
+                            SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(NUMBER,number);
+                            editor.putString(PASSWORD,password);
+                            editor.apply();
                         }
                         loadingBar.dismiss();
                         Toast.makeText(InputActivity.this, " вечер в хату ", Toast.LENGTH_LONG).show();
                         Intent regIntent = new Intent(InputActivity.this, HomeActivity.class);
                         startActivity(regIntent);
+                    }
+                    else{
+                        loadingBar.dismiss();
+                        Toast.makeText(InputActivity.this, "кривой пароль", Toast.LENGTH_LONG).show();
                     }
                 }
                 else{

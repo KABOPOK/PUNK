@@ -2,6 +2,7 @@ package ru.kabopok.punk_jv.classes;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 
 import ru.kabopok.punk_jv.R;
@@ -18,6 +19,7 @@ public class LoadingBar {
         dialog  = builder.create();
         dialog.show();
     }
+
     public void dismiss(){
         dialog.dismiss();
     }

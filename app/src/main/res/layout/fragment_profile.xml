@@ -143,8 +143,20 @@
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/userProfilePassword_TextView" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/log_out_profile"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginEnd="9dp"
+                    android:src="@drawable/log_out_vector"
+                    app:civ_circle_background_color="@color/strangeLowBlack"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

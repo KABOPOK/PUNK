@@ -64,4 +64,9 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation ("com.karumi:dexter:6.2.3")
     implementation ("com.github.yalantis:ucrop:2.2.6")
+
+    implementation ("id.zelory:compressor:3.0.1")
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation ("com.github.chrisbanes:PhotoView:2.3.0")
 }

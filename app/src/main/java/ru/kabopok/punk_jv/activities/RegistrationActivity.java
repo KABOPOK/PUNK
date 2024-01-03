@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import com.squareup.picasso.Picasso;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import ru.kabopok.punk_jv.R;
+import ru.kabopok.punk_jv.classes.ImageResizer;
 import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.current.Online;
 
@@ -83,15 +85,17 @@ public class RegistrationActivity extends AppCompatActivity {
         createUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkBox.isChecked()){
+                if(checkBox.isChecked() && CorrectData()){
                     loadingBar.show();
                     if(photoUserUri == null){
                         int resID = getResources().getIdentifier("default_photo.png", "drawable", getApplicationContext().getPackageName());
                         photoUser.setImageResource(resID);
                         photoUserUri = Uri.parse("android.resource://"+getPackageName()+"/drawable/default_photo.jpg");
+                        photoUser.setImageURI(photoUserUri);
                     }
                     uploadImgWithCompress();
                 }
+                else if(checkBox.isChecked()){}
                 else{
                     Exception Exception = null;
                     try {
@@ -112,6 +116,7 @@ public class RegistrationActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 photoUserUri = result.getUri();
                 photoUser.setImageURI(photoUserUri);
+                //test.setImageURI(photoUserUri);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
@@ -127,8 +132,9 @@ public class RegistrationActivity extends AppCompatActivity {
         byte[] bytes = new byte[0];
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUserUri);
+            Bitmap newWay = ImageResizer.reduceBitmapSize(bitmap, 1000000);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 40,byteArrayOutputStream);
+            newWay.compress(Bitmap.CompressFormat.JPEG, 40,byteArrayOutputStream);
             bytes = byteArrayOutputStream.toByteArray();
         }catch (IOException e){
             e.printStackTrace();
@@ -137,7 +143,7 @@ public class RegistrationActivity extends AppCompatActivity {
         ref.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(RegistrationActivity.this, "красивая девушка!!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RegistrationActivity.this, "красивая девушка!!", Toast.LENGTH_SHORT).show();
                 Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
                 result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
@@ -149,8 +155,6 @@ public class RegistrationActivity extends AppCompatActivity {
                         String number = numberData.getText().toString();
                         String password = passwordData.getText().toString();
                         sendToBase(name, gender, number, password, imgUrl);
-                        Intent toHomeIntent = new Intent(RegistrationActivity.this, HomeActivity.class);
-                        startActivity(toHomeIntent);
                     }
                 });
             }
@@ -191,7 +195,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             });
                 }
                 else{
-                    Toast.makeText(RegistrationActivity.this, "Already registered -> " + number, Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegistrationActivity.this, "уже есть с таким номером-> " + number, Toast.LENGTH_LONG).show();
                     Intent regIntent = new Intent(RegistrationActivity.this, MainActivity.class);
                     startActivity(regIntent);
                     loadingBar.dismiss();

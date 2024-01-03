@@ -2,6 +2,7 @@ package ru.kabopok.punk_jv.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +42,18 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import ru.kabopok.punk_jv.R;
+import ru.kabopok.punk_jv.activities.HomeActivity;
+import ru.kabopok.punk_jv.activities.InputActivity;
+import ru.kabopok.punk_jv.classes.ImageResizer;
 import ru.kabopok.punk_jv.classes.ViewPagerAdapter;
 import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.classes.User;
@@ -54,7 +61,6 @@ import ru.kabopok.punk_jv.current.Online;
 import ru.kabopok.punk_jv.databinding.FragmentPublishProductBinding;
 
 public class PublishProductFragment extends Fragment {
-
     FragmentPublishProductBinding binding;
     StorageReference storageReference;
     private EditText productTitle;
@@ -73,7 +79,8 @@ public class PublishProductFragment extends Fragment {
     Button pick;
     private final int REQUEST_PERMISSION_CODE = 35;
     private final int PICK_IMAGE_CODE = 39;
-
+    int joke=0;
+    LoadingBar loadingBar;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_publish_product, container, false);
@@ -87,20 +94,26 @@ public class PublishProductFragment extends Fragment {
         pick = view.findViewById(R.id.pick);
         binding = FragmentPublishProductBinding.inflate(getLayoutInflater());
 
-        final LoadingBar loadingBar = new LoadingBar(this.getActivity());
-
+        loadingBar = new LoadingBar(this.getActivity());
         pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //checkUserPermission();
-                 activityResultLauncher.launch("image/*");
+                if(joke<8) {
+                    PickImages();
+                }else {
+                    pick.setText("я дурачёк");
+                    Toast.makeText(getContext(), "нет, ты просто студент", Toast.LENGTH_SHORT).show();
+                }
             }
+
         });
         PushProduct.setOnClickListener(v -> {
             loadingBar.show();
             if(CorrectData()) {
                 sendToBase();
-                uploadImgWithCompress(loadingBar);
+                uploadImgWithCompress();
+            }else{
+                loadingBar.dismiss();
             }
         });
         return view;
@@ -110,40 +123,14 @@ public class PublishProductFragment extends Fragment {
         public void onActivityResult(List<Uri> result) {
             ArrayList<String> arrayList=new ArrayList<>();
             uriArrayList.addAll(result);
-//            if (data.getClipData() != null) {
-//                int x = data.getClipData().getItemCount();
-//                for (int i = 0; i < x; i++) {
-//                    uriArrayList.add(data.getClipData().getItemAt(i).getUri());
-//                }
-//            } else if (data.getData() != null) {
-//                uriArrayList.add(data.getData());
-//            }
             setAdapter();
-//            GridLayoutManager gridLayoutManager=new GridLayoutManager(getView().getContext(),2);
-//            binding.imageRecyclerView.setLayoutManager(gridLayoutManager);
-//
-//            modelClass modelClass=new modelClass(arrayList,Tutorial_4_Activity.this);
-//            binding.imageRecyclerView.setAdapter(modelClass);
-//            Toast.makeText(Tutorial_4_Activity.this, ""+arrayList.size(), Toast.LENGTH_SHORT).show();
-//            // Let's run
-//            // Thanks For Watching
         }
     });
-    private void checkUserPermission(){
-        PickImages();
-    }
 
     private void PickImages() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        }
         startActivityForResult(Intent.createChooser(intent, "Select Picture"),PICK_IMAGE_CODE);
-        if(uriArrayList != null){
-            uriArrayList.clear();
-        }
-
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -161,29 +148,45 @@ public class PublishProductFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == PICK_IMAGE_CODE && resultCode == Activity.RESULT_OK){
-            if(data != null) {
-                if (data.getClipData() != null) {
-                    int x = data.getClipData().getItemCount();
-                    for (int i = 0; i < x; ++i) {
-                        uriArrayList.add(data.getClipData().getItemAt(i).getUri());
+            ++joke;
+            switch (joke){
+                case 1:
+                    pick.setText("ещё одну подгрузить");
+                    break;
+                case 2:
+                    pick.setText("и ещё");
+                    break;
+                case 3:
+                    pick.setText("ещё!!!");
+                    break;
+                case 4:
+                    pick.setText("ну вот ещё одну");
+                    break;
+                case 5:
+                    pick.setText("ну вот надо ещё");
+                    break;
+                case 6:
+                    pick.setText("ну вот последнюю");
+                    break;
+                default:
+                    if(joke<8) {
+                        pick.setText("точно последнюю");
                     }
-                } else if (data.getData() != null) {
-                    uriArrayList.add(data.getData());
-                }
-                setAdapter();
             }
+            uriArrayList.add(data.getClipData().getItemAt(0).getUri());
+            setAdapter();
         }
     }
-    private void uploadImgWithCompress(LoadingBar loadingBar){
+    private void uploadImgWithCompress(){
         for(int i =0;  i < uriArrayList.size(); ++i) {
             uriOfImg = uriArrayList.get(i);
             byte[] bytes = new byte[0];
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContext().getContentResolver(), uriOfImg);
+                Bitmap newWay = ImageResizer.reduceBitmapSize(bitmap, 1000000);
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 40, byteArrayOutputStream);
+                newWay.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
                 bytes = byteArrayOutputStream.toByteArray();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -205,6 +208,8 @@ public class PublishProductFragment extends Fragment {
                             if(counter >= uriArrayList.size()){
                                 counter=0;
                                 loadingBar.dismiss();
+                                Intent inputIntent = new Intent(PublishProductFragment.this.getContext(), HomeActivity.class);
+                                startActivity(inputIntent);
                             }
                         }
                     });
@@ -279,17 +284,19 @@ public class PublishProductFragment extends Fragment {
         });
     }
     private void setAdapter(){
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayList,null, this::zoomPicture,null);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayList,null, this::zoomPicture);
         viewPager.setAdapter(viewPagerAdapter);
     }
-    private void zoomPicture(Uri photo){
+    private void zoomPicture(){
         Dialog dialog = new Dialog(this.getContext());
         dialog.setContentView(R.layout.custom_dialog_zoom);
-        ImageView img  = dialog.findViewById(R.id.custom_image_dialog);
+        ViewPager pager  = dialog.findViewById(R.id.custom_ViewPager_dialog);
+
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayList,null, null);
+        pager.setAdapter(viewPagerAdapter);
+
         Button closeDialog = dialog.findViewById(R.id.custom_button_dialog);
-        //Or this one instead:
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        img.setImageURI(photo);
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,4 +311,6 @@ public class PublishProductFragment extends Fragment {
         if(TextUtils.isEmpty(productPrice.getText())){Toast.makeText(this.getContext(),"почём эта шафка?",Toast.LENGTH_SHORT).show(); return false;}
         return true;
     }
+
+
 }

@@ -12,6 +12,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class HomeFragment extends Fragment {
     RecyclerView rvProducts;
     ProductAdapter productAdapter;
     SearchView searchView;
+    Button searchButton;
     List<Product> productList = new ArrayList<>();
 
     User currentUser = Online.getCurrentUser();
@@ -57,6 +59,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         rvProducts = view.findViewById(R.id.rvProducts);
         searchView = view.findViewById(R.id.searchView);
+        searchButton = view.findViewById(R.id.search_Button);
         searchView.clearFocus();
         searchView.setQueryHint(Html.fromHtml("<font color = #7A7A7A>" + "find" + "</font>"));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

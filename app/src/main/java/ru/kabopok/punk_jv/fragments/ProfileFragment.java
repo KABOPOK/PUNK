@@ -1,7 +1,10 @@
 package ru.kabopok.punk_jv.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,10 +16,12 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -40,6 +45,7 @@ import java.util.UUID;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.activities.HomeActivity;
+import ru.kabopok.punk_jv.activities.InputActivity;
 import ru.kabopok.punk_jv.activities.MainActivity;
 import ru.kabopok.punk_jv.activities.ProductActivity;
 import ru.kabopok.punk_jv.activities.ProfileActivity;
@@ -47,6 +53,7 @@ import ru.kabopok.punk_jv.activities.PublishProductActivity;
 import ru.kabopok.punk_jv.activities.RegistrationActivity;
 import ru.kabopok.punk_jv.activities.UserProductsActivity;
 import ru.kabopok.punk_jv.activities.UserProfileActivity;
+import ru.kabopok.punk_jv.classes.ImageResizer;
 import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.User;
@@ -62,7 +69,12 @@ public class ProfileFragment extends Fragment {
     CircleImageView pick;
     Uri photoUserUri;
     Activity profile;
+    CircleImageView log_out;
     User currentUser = Online.getCurrentUser();
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String NUMBER = "number";
+    public static final String PASSWORD = "password";
+    LoadingBar loadingBar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -75,11 +87,15 @@ public class ProfileFragment extends Fragment {
         userPassword = view.findViewById(R.id.userProfilePassword_TextView);
         userNumber = view.findViewById(R.id.userProfileNumber_TextView);
         pick = view.findViewById(R.id.edit_profile_pick);
+        log_out = view.findViewById(R.id.log_out_profile);
 
         name.setText(currentUser.getName());
         userGender.setText(currentUser.getGender());
         userPassword.setText(currentUser.getPassword());
         userNumber.setText(currentUser.getNumber());
+
+        SharedPreferences sharedPreferences = this.getContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        loadingBar = new LoadingBar(this.getActivity());
         pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,8 +104,16 @@ public class ProfileFragment extends Fragment {
                             .start(getContext(),ProfileFragment.this);
             }
         });
-
-        Picasso.with(view.getContext()).load(Online.getCurrentUser().getPhotoUserUrl()).into(userPhoto);
+        log_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences.edit().remove(NUMBER).commit();
+                sharedPreferences.edit().remove(PASSWORD).commit();
+                Intent inputIntent = new Intent(ProfileFragment.this.getContext(), InputActivity.class);
+                startActivity(inputIntent);
+            }
+        });
+        Glide.with(view.getContext()).load(Online.getCurrentUser().getPhotoUserUrl()).into(userPhoto);
         return view;
     }
 
@@ -97,8 +121,9 @@ public class ProfileFragment extends Fragment {
             byte[] bytes = new byte[0];
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContext().getContentResolver(), uriOfImg);
+                Bitmap newWay = ImageResizer.reduceBitmapSize(bitmap, 1000000);
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 40, byteArrayOutputStream);
+                newWay.compress(Bitmap.CompressFormat.PNG, 40, byteArrayOutputStream);
                 bytes = byteArrayOutputStream.toByteArray();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -136,6 +161,7 @@ public class ProfileFragment extends Fragment {
                 //Exception error = result.getError();
             }
         }
+        loadingBar.show();
     }
 
     private void replacePhoto(String imgUrl, String path) {
@@ -160,6 +186,7 @@ public class ProfileFragment extends Fragment {
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
+                                    loadingBar.dismiss();
                                     Toast.makeText(getActivity(), "Внешнасть не главная " + currentUser.getName(), Toast.LENGTH_LONG).show();
                                 }
                             });

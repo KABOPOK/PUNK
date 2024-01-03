@@ -75,7 +75,8 @@
         <TextView
             android:layout_width="245dp"
             android:layout_height="53dp"
-            android:text="kabopok"
+            android:text="kabopok---isapanv"
+
             android:textColor="@color/white"
             android:textSize="10dp"
             android:gravity="center"

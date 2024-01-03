@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -111,7 +112,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         holder.row_price.setText(product.getProductPrice());
         holder.row_info.setText(product.getProductInfo());
         holder.row_user_name.setText(product.getProductOwnerName());
-        Picasso.with(context).load(product.getOnePhoto()).into(holder.row_image);
+        Glide.with(context).load(product.getOnePhoto()).into(holder.row_image);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
