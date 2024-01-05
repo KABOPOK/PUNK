@@ -39,4 +39,10 @@
         <item name="color">@color/strangeBlack</item>
     </style>
     <style name="Theme.PUNK_JV" parent="Base.Theme.PUNK_JV" />
+    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="icon">@drawable/ic_search</item> // Custom search icon
+        <item name="android:textColor">@color/strangeYellow</item> // Custom search icon
+        <item name="android:textColorHint">@color/strangeLowBlack</item> // Custom search icon
+        <item name="android:hint">"найти то, что искал"</item> // Custom search icon
+    </style>
 </resources>

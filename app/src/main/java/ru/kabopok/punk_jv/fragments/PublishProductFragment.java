@@ -1,5 +1,7 @@
 package ru.kabopok.punk_jv.fragments;
 
+import static ru.kabopok.punk_jv.fragments.ProfileFragment.RESULT_OK;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -10,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -49,6 +52,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import javax.xml.transform.Result;
 
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.activities.HomeActivity;
@@ -99,7 +104,9 @@ public class PublishProductFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(joke<8) {
-                    PickImages();
+                    //PickImages();
+                    Intent pickImg = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    upLoadImage.launch(pickImg);
                 }else {
                     pick.setText("я дурачёк");
                     Toast.makeText(getContext(), "нет, ты просто студент", Toast.LENGTH_SHORT).show();
@@ -116,12 +123,68 @@ public class PublishProductFragment extends Fragment {
                 loadingBar.dismiss();
             }
         });
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    Toast.makeText(getContext(), "permisson denied", Toast.LENGTH_SHORT);
+                    // Handle back button press within the View
+                    return false;
+                }
+                return false;
+            }
+        });
+        setOnBackPressed();
         return view;
     }
+
+    private void setOnBackPressed() {
+        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Toast.makeText(getContext(), "permisson denied", Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
+    ActivityResultLauncher<Intent> upLoadImage = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result->{
+                if(result.getResultCode() == RESULT_OK && result.getData()!=null){
+                    ++joke;
+                    switch (joke){
+                        case 1:
+                            pick.setText("ещё одну подгрузить");
+                            break;
+                        case 2:
+                            pick.setText("и ещё");
+                            break;
+                        case 3:
+                            pick.setText("ещё!!!");
+                            break;
+                        case 4:
+                            pick.setText("ну вот ещё одну");
+                            break;
+                        case 5:
+                            pick.setText("ну вот надо ещё");
+                            break;
+                        case 6:
+                            pick.setText("ну вот последнюю");
+                            break;
+                        default:
+                            if(joke<8) {
+                                pick.setText("точно последнюю");
+                            }
+                    }
+                    uriArrayList.add(result.getData().getData());
+                    setAdapter();
+                }
+            }
+    );
+
     ActivityResultLauncher<String> activityResultLauncher=registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), new ActivityResultCallback<List<Uri>>() {
         @Override
         public void onActivityResult(List<Uri> result) {
-            ArrayList<String> arrayList=new ArrayList<>();
             uriArrayList.addAll(result);
             setAdapter();
         }

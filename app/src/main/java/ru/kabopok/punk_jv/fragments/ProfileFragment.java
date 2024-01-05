@@ -123,7 +123,7 @@ public class ProfileFragment extends Fragment {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContext().getContentResolver(), uriOfImg);
                 Bitmap newWay = ImageResizer.reduceBitmapSize(bitmap, 1000000);
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                newWay.compress(Bitmap.CompressFormat.PNG, 40, byteArrayOutputStream);
+                newWay.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
                 bytes = byteArrayOutputStream.toByteArray();
             } catch (IOException e) {
                 e.printStackTrace();

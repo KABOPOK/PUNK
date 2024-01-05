@@ -1,18 +1,29 @@
 package ru.kabopok.punk_jv.fragments;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -41,13 +52,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class HomeFragment extends Fragment {
 
     RecyclerView rvProducts;
+    ImageView imageView;
     ProductAdapter productAdapter;
-    SearchView searchView;
-    Button searchButton;
+    EditText searchView;
     List<Product> productList = new ArrayList<>();
 
     User currentUser = Online.getCurrentUser();
@@ -58,25 +71,50 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         rvProducts = view.findViewById(R.id.rvProducts);
-        searchView = view.findViewById(R.id.searchView);
-        searchButton = view.findViewById(R.id.search_Button);
+        searchView = view.findViewById(R.id.searchView2);
+        imageView = view.findViewById(R.id.circleImageView);
         searchView.clearFocus();
-        searchView.setQueryHint(Html.fromHtml("<font color = #7A7A7A>" + "find" + "</font>"));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        //searchView.setQueryHint(Html.fromHtml("<font color = #7A7A7A>" + "find" + "</font>"));
+        searchView.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Perform search as the user types
+                String query = s.toString().trim();
+                showFilterList(query);
+                imageView.setImageResource(R.drawable.ic_close);
+                if(query.equals("")){
+                    imageView.setImageResource(R.drawable.ic_black_close);
+                }
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                showFilterList(newText);
-                return false;
+            public void afterTextChanged(Editable s) { }
+        });
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.clearFocus();
+                searchView.setText("");
+                imageView.setImageResource(R.drawable.ic_black_close);
+                View view = getView();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
             }
         });
         setData();
         prepareRV();
+        setOnBackPressed();
         return view;
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(requireActivity().getCurrentFocus().getWindowToken(), 0);
     }
 
     private void showFilterList(String newText) {
@@ -88,7 +126,7 @@ public class HomeFragment extends Fragment {
         }
 
         if (filteredList.isEmpty()) {
-            Toast.makeText(this.getContext(), "раскупили такие", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this.getContext(), "раскупили такие", Toast.LENGTH_LONG).show();
         } else {
             productAdapter.setProductList(filteredList);
         }
@@ -127,6 +165,11 @@ public class HomeFragment extends Fragment {
                 if(!AdapterPrepared) {
                     for (DataSnapshot postSnapshot : dataSnapshot.child("Products").getChildren()) {
                         ArrayList<String> photos = new ArrayList<>();
+                        if(!postSnapshot.child("images").exists()){
+                            Product product = postSnapshot.getValue(Product.class);
+                            //deleteInvalidProduct(product);
+                            continue;
+                        }
                         for (DataSnapshot postSnapshotPhoto : postSnapshot.child("images").getChildren()) {
                             Photo photo = postSnapshotPhoto.getValue(Photo.class);
                             photos.add(photo.getURL());
@@ -146,6 +189,33 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
+    private void deleteInvalidProduct(Product product) {
+        //delete from myProducts
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getNumber()).child("UserProducts").child(product.getProductKey());
+        Task<Void> removeTask = rootRef.removeValue();
+        removeTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+            }
+        });
+        //delete product
+        removeTask = FirebaseDatabase.getInstance().getReference("Products").child(product.getProductKey()).removeValue();
+        removeTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                final StorageReference storeRef = FirebaseStorage.getInstance().getReference();
+                ArrayList<String> photos = product.getImagesPathList();
+                for(int i =0; i < photos.size(); ++i) {
+                    StorageReference reference = storeRef.child(photos.get(i));
+                    reference.delete();
+                }
+            }
+        });
+    }
+
     private void addToFavourite(Product product) {
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -175,6 +245,16 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(Void unused) {
                 product.getProductOwner();
+            }
+        });
+    }
+
+    private void setOnBackPressed() {
+        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Toast.makeText(getContext(), "permisson denied", Toast.LENGTH_SHORT);
+                searchView.clearFocus();
             }
         });
     }
