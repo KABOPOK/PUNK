@@ -1,9 +1,12 @@
 package ru.kabopok.punk_jv.activities;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +30,8 @@ public class UserProfileActivity extends AppCompatActivity {
     TextView userGender;
     TextView userNumber;
 
+    ImageView pickBack;
+
     User currentUser;
     Product currentProduct = Online.getCurrentProduct();
     @Override
@@ -37,7 +42,16 @@ public class UserProfileActivity extends AppCompatActivity {
         userName = findViewById(R.id.nameOfUser_TextView);
         userGender = findViewById(R.id.genderOfUser_TextView);
         userNumber = findViewById(R.id.numberOfUser_TextView);
+        pickBack = findViewById(R.id.pick_back);
         getUserdata(currentProduct.getProductOwner());
+        setOnBackPressed();
+        pickBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent backToProductIntent  = new Intent(UserProfileActivity.this, ProductActivity.class);
+                startActivity(backToProductIntent);
+            }
+        });
     }
 
     private void getUserdata(String number) {
@@ -72,5 +86,14 @@ public class UserProfileActivity extends AppCompatActivity {
         if(currentUser.getPhotoUserUrl()!=null){
             Picasso.with(this).load(currentUser.getPhotoUserUrl()).into(userPhoto);
         }
+    }
+    private void setOnBackPressed() {
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent backToProductIntent  = new Intent(UserProfileActivity.this, ProductActivity.class);
+                startActivity(backToProductIntent);
+            }
+        });
     }
 }

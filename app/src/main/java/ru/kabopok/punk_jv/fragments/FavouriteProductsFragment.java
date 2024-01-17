@@ -3,6 +3,7 @@ package ru.kabopok.punk_jv.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -49,7 +51,7 @@ public class FavouriteProductsFragment extends Fragment {
         title.setText("эти штучки тебе нравятся");
         setData();
         prepareRV();
-
+        setOnBackPressed();
         return view;
     }
     private void prepareRV() {
@@ -158,6 +160,15 @@ public class FavouriteProductsFragment extends Fragment {
             @Override
             public void onSuccess(Void unused) {
                 product.getProductOwner();
+            }
+        });
+    }
+
+    private void setOnBackPressed() {
+        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Toast.makeText(getContext(), "permisson denied", Toast.LENGTH_SHORT);
             }
         });
     }

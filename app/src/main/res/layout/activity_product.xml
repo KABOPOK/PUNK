@@ -6,15 +6,35 @@
     android:layout_height="match_parent"
     android:background="@color/strangeBlack"
     tools:context=".activities.ProductActivity">
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigationViewUp"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#1e1e1e"
+        app:itemActiveIndicatorStyle="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/pick_back"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationViewUp" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/images_ViewPager"
-        android:layout_width="381dp"
-        android:layout_height="285dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="294dp"
+        android:layout_height="244dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/navigationViewUp" />
 
     <TextView
         android:id="@+id/nameOfProduct_TextView"

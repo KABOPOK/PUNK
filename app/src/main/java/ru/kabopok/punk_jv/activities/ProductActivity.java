@@ -1,5 +1,6 @@
 package ru.kabopok.punk_jv.activities;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -28,6 +29,7 @@ public class ProductActivity extends AppCompatActivity {
     TextView priceOfProduct;
     TextView productInfo;
     Button toUserProfileButton;
+    ImageView pickBack;
     Product currentProduct = Online.getCurrentProduct();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class ProductActivity extends AppCompatActivity {
         priceOfProduct = findViewById(R.id.priceOfProduct_TextView);
         productInfo = findViewById(R.id.infoOfProduct_TextView);
         toUserProfileButton = findViewById(R.id.toProfileUser_Button);
+        pickBack = findViewById(R.id.pick_back);
         nameOfUser.setText(currentProduct.getProductName());
         ownerProductName.setText(currentProduct.getProductOwnerName());
         priceOfProduct.setText(currentProduct.getProductPrice());
@@ -48,6 +51,14 @@ public class ProductActivity extends AppCompatActivity {
             Intent userIntent = new Intent(ProductActivity.this, UserProfileActivity.class);
             startActivity(userIntent);
         });
+        pickBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent backToProductHome  = new Intent(ProductActivity.this, HomeActivity.class);
+                startActivity(backToProductHome);
+            }
+        });
+        setOnBackPressed();
     }
 
     private void setAdapter(){
@@ -73,5 +84,15 @@ public class ProductActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    private void setOnBackPressed() {
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent backToProductHome  = new Intent(ProductActivity.this, HomeActivity.class);
+                startActivity(backToProductHome);
+            }
+        });
     }
 }
