@@ -120,6 +120,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
             }
         });
         if(!myProductsLayout) {
+            holder.heartButton.setChecked(false);
             setSparkButtonCondition(holder.heartButton, product.getProductKey());
             holder.heartButton.setEventListener(new SparkEventListener() {
                 @Override
@@ -146,7 +147,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
             holder.trashCase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     deleteProduct(product);
                     productList.remove(position);
                     notifyDataSetChanged();
@@ -230,4 +230,5 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
             row_user_name = itemView.findViewById(R.id.row_userName_TextView);
         }
     }
+
 }

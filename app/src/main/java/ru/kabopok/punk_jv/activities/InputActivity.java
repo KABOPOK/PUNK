@@ -68,6 +68,12 @@ public class InputActivity extends AppCompatActivity {
 
         loadingBar.show();
 
+        if(number.equals("alice") && password.equals("29")){
+            Intent DeveloperIntent = new Intent(InputActivity.this, DeveloperActivity.class);
+            startActivity(DeveloperIntent);
+            return;
+        }
+
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {

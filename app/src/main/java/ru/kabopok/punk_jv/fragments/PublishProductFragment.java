@@ -104,7 +104,6 @@ public class PublishProductFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(joke<8) {
-                    //PickImages();
                     Intent pickImg = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     upLoadImage.launch(pickImg);
                 }else {
@@ -128,7 +127,6 @@ public class PublishProductFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     Toast.makeText(getContext(), "permisson denied", Toast.LENGTH_SHORT);
-                    // Handle back button press within the View
                     return false;
                 }
                 return false;
@@ -172,8 +170,8 @@ public class PublishProductFragment extends Fragment {
                             pick.setText("ну вот последнюю");
                             break;
                         default:
-                            if(joke<8) {
-                                pick.setText("точно последнюю");
+                            if (joke > 7) {
+                                pick.setText("я дурачёк");
                             }
                     }
                     uriArrayList.add(result.getData().getData());
@@ -182,65 +180,59 @@ public class PublishProductFragment extends Fragment {
             }
     );
 
-    ActivityResultLauncher<String> activityResultLauncher=registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), new ActivityResultCallback<List<Uri>>() {
-        @Override
-        public void onActivityResult(List<Uri> result) {
-            uriArrayList.addAll(result);
-            setAdapter();
-        }
-    });
 
-    private void PickImages() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"),PICK_IMAGE_CODE);
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(REQUEST_PERMISSION_CODE == requestCode){
-            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                PickImages();
-            }
-            else{
-                Toast.makeText(this.getContext(), "permisson denied", Toast.LENGTH_SHORT);
-            }
-        }
-    }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_CODE && resultCode == Activity.RESULT_OK){
-            ++joke;
-            switch (joke){
-                case 1:
-                    pick.setText("ещё одну подгрузить");
-                    break;
-                case 2:
-                    pick.setText("и ещё");
-                    break;
-                case 3:
-                    pick.setText("ещё!!!");
-                    break;
-                case 4:
-                    pick.setText("ну вот ещё одну");
-                    break;
-                case 5:
-                    pick.setText("ну вот надо ещё");
-                    break;
-                case 6:
-                    pick.setText("ну вот последнюю");
-                    break;
-                default:
-                    if(joke<8) {
-                        pick.setText("точно последнюю");
-                    }
-            }
-            uriArrayList.add(data.getClipData().getItemAt(0).getUri());
-            setAdapter();
-        }
-    }
+//    private void PickImages() {
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        intent.setType("image/*");
+//        startActivityForResult(Intent.createChooser(intent, "Select Picture"),PICK_IMAGE_CODE);
+//    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        if(REQUEST_PERMISSION_CODE == requestCode){
+//            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+//                PickImages();
+//            }
+//            else{
+//                Toast.makeText(this.getContext(), "permisson denied", Toast.LENGTH_SHORT);
+//            }
+//        }
+//    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == PICK_IMAGE_CODE && resultCode == Activity.RESULT_OK){
+//            ++joke;
+//            switch (joke){
+//                case 1:
+//                    pick.setText("ещё одну подгрузить");
+//                    break;
+//                case 2:
+//                    pick.setText("и ещё");
+//                    break;
+//                case 3:
+//                    pick.setText("ещё!!!");
+//                    break;
+//                case 4:
+//                    pick.setText("ну вот ещё одну");
+//                    break;
+//                case 5:
+//                    pick.setText("ну вот надо ещё");
+//                    break;
+//                case 6:
+//                    pick.setText("ну вот последнюю");
+//                    break;
+//                default:
+//                    if(joke<8) {
+//                        pick.setText("точно последнюю");
+//                    }
+//            }
+//            uriArrayList.add(data.getClipData().getItemAt(0).getUri());
+//            setAdapter();
+//        }
+//    }
     private void uploadImgWithCompress(){
         for(int i =0;  i < uriArrayList.size(); ++i) {
             uriOfImg = uriArrayList.get(i);

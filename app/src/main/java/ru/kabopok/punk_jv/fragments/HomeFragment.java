@@ -124,10 +124,7 @@ public class HomeFragment extends Fragment {
                 filteredList.add(product);
             }
         }
-
-        if (filteredList.isEmpty()) {
-            //Toast.makeText(this.getContext(), "раскупили такие", Toast.LENGTH_LONG).show();
-        } else {
+        if (filteredList.isEmpty()) {} else {
             productAdapter.setProductList(filteredList);
         }
     }
