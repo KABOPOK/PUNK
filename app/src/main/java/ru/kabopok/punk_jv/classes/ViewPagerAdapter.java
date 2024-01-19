@@ -26,13 +26,15 @@ public class ViewPagerAdapter extends PagerAdapter {
     ArrayList<String> imagesURLs;
     LayoutInflater layoutInflater;
     ItemClickListener itemClickListener;
+    ImageCounter imageCounter;
 
-    public ViewPagerAdapter(Context context, ArrayList<Uri> imagesUris, ArrayList<String> imagesURLs, ItemClickListener itemClickListener) {
+    public ViewPagerAdapter(Context context, ArrayList<Uri> imagesUris, ArrayList<String> imagesURLs, ItemClickListener itemClickListener,ImageCounter imageCounter) {
         this.context = context;
         this.imagesUris = imagesUris;
         this.layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         this.imagesURLs = imagesURLs;
         this.itemClickListener = itemClickListener;
+        this.imageCounter = imageCounter;
     }
 
     @Override
@@ -46,17 +48,19 @@ public class ViewPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        TextView text;
+        //TextView text;
         View view = layoutInflater.inflate(R.layout.custom_single_image,container, false);
         ImageView imageView = view.findViewById(R.id.custom_image_ImageView);
-        text = view.findViewById(R.id.text);
+       // text = view.findViewById(R.id.text);
         if(imagesUris != null) {
             Glide.with(context).load(imagesUris.get(position)).into(imageView);
-            text.setText(String.valueOf(position+1) + "/" + String.valueOf(imagesUris.size()));
+            //text.setText(String.valueOf(position+1) + "/" + String.valueOf(imagesUris.size()));
+            //imageCounter.setImageCounter(position,imagesUris.size());
         }
         else{
             Glide.with(context).load(imagesURLs.get(position)).into(imageView);
-            text.setText(String.valueOf(position+1) + "/" + String.valueOf(imagesURLs.size()));
+            //text.setText(String.valueOf(position+1) + "/" + String.valueOf(imagesURLs.size()));
+            //imageCounter.setImageCounter(position,imagesURLs.size());
         }
         Objects.requireNonNull(container).addView(view);
 
@@ -68,7 +72,6 @@ public class ViewPagerAdapter extends PagerAdapter {
                 }
             }
         });
-
         return view;
     }
 
@@ -84,5 +87,9 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     public interface ItemClickListener{
         void ItemClick();
+    }
+
+    public interface ImageCounter{
+        void setImageCounter(int current, int amount);
     }
 }

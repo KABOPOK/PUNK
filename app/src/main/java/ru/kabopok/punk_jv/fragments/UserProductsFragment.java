@@ -31,6 +31,7 @@ import ru.kabopok.punk_jv.activities.UserProductsActivity;
 import ru.kabopok.punk_jv.classes.Photo;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.ProductAdapter;
+import ru.kabopok.punk_jv.classes.QuitDialog;
 import ru.kabopok.punk_jv.classes.User;
 import ru.kabopok.punk_jv.current.Online;
 
@@ -38,6 +39,7 @@ public class UserProductsFragment extends Fragment {
     RecyclerView rvProducts;
     ProductAdapter productAdapter;
     TextView title;
+    QuitDialog quitDialog;
     List<Product> productList = new ArrayList<>();
     User currentUser = Online.getCurrentUser();
 
@@ -49,6 +51,7 @@ public class UserProductsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_products, container, false);
         title = view.findViewById(R.id.title_TextView);
         rvProducts = view.findViewById(R.id.rvUserProducts);
+        quitDialog = new QuitDialog(getActivity(),getContext());
         title.setText("ну, типо, твои товары");
         setData();
         prepareRV();
@@ -125,7 +128,7 @@ public class UserProductsFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Toast.makeText(getContext(), "permisson denied", Toast.LENGTH_SHORT);
+                quitDialog.show();
             }
         });
     }

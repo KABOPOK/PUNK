@@ -1,5 +1,6 @@
 package ru.kabopok.punk_jv.activities;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -45,6 +46,7 @@ import java.util.UUID;
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.classes.ImageResizer;
 import ru.kabopok.punk_jv.classes.LoadingBar;
+import ru.kabopok.punk_jv.classes.QuitDialog;
 import ru.kabopok.punk_jv.current.Online;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -57,6 +59,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText nameData;
     StorageReference storageReference;
     private StorageReference StoreRef;
+    QuitDialog quitDialog;
     private EditText genderData;
     private EditText numberData;
     private EditText passwordData;
@@ -75,6 +78,7 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordData = (EditText) findViewById(R.id.create_password);
         checkBox = findViewById(R.id.checkRegistration_CheckBox);
         photoUser = findViewById(R.id.registrationUserPhoto_ImageView);
+        quitDialog = new QuitDialog(this,this);
 
         photoUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,15 +92,21 @@ public class RegistrationActivity extends AppCompatActivity {
                 if(checkBox.isChecked() && CorrectData()){
                     loadingBar.show();
                     if(photoUserUri == null){
-                        int resID = getResources().getIdentifier("default_photo.png", "drawable", getApplicationContext().getPackageName());
-                        photoUser.setImageResource(resID);
-                        photoUserUri = Uri.parse("android.resource://"+getPackageName()+"/drawable/default_photo.jpg");
-                        photoUser.setImageURI(photoUserUri);
+                        int drawableId = R.drawable.photo;  // Replace with your actual resource ID
+                        Drawable drawable = getResources().getDrawable(drawableId);
+                        photoUser.setImageDrawable(drawable);
+                        loadingBar.dismiss();
+                        String name = nameData.getText().toString();
+                        String gender = genderData.getText().toString();
+                        String number = numberData.getText().toString();
+                        String password = passwordData.getText().toString();
+                        sendToBase(name, gender, number, password, "stesnashka");
                     }
-                    uploadImgWithCompress();
+                    else {
+                        uploadImgWithCompress();
+                    }
                 }
-                else if(checkBox.isChecked()){}
-                else{
+                else if(!checkBox.isChecked() && CorrectData()){
                     Exception Exception = null;
                     try {
                         throw Exception;
@@ -106,6 +116,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
             }
         });
+        setOnBackPressed();
     }
 
     @Override
@@ -214,5 +225,14 @@ public class RegistrationActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(numberData.getText())){Toast.makeText(this,"эй девушка, телефонъчик скиньте",Toast.LENGTH_SHORT).show(); return false;}
         if(TextUtils.isEmpty(genderData.getText())){Toast.makeText(this,"@token - VK/Telegram",Toast.LENGTH_SHORT).show(); return false;}
         return true;
+    }
+    private void setOnBackPressed() {
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent backToMain  = new Intent(RegistrationActivity.this, MainActivity.class);
+                startActivity(backToMain);
+            }
+        });
     }
 }

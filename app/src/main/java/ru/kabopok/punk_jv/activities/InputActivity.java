@@ -1,5 +1,6 @@
 package ru.kabopok.punk_jv.activities;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -54,6 +55,7 @@ public class InputActivity extends AppCompatActivity {
                 InToApp();
             }
         });
+        setOnBackPressed();
     }
 
     private void InToApp() {
@@ -112,6 +114,15 @@ public class InputActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+    }
+    private void setOnBackPressed() {
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent backToMain  = new Intent(InputActivity.this, MainActivity.class);
+                startActivity(backToMain);
             }
         });
     }

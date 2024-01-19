@@ -1,5 +1,6 @@
 package ru.kabopok.punk_jv.activities;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.ProductAdapter;
+import ru.kabopok.punk_jv.classes.QuitDialog;
 import ru.kabopok.punk_jv.classes.User;
 import ru.kabopok.punk_jv.current.Online;
 
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private Button registration;
 
     final LoadingBar loadingBar = new LoadingBar(MainActivity.this);
+    QuitDialog quitDialog;
     private CheckBox rememberUser;
     private TextView punkText;
     public static final String SHARED_PREFS = "sharedPrefs";
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             punkText = findViewById(R.id.textView5);
         }
         Typeface typeface = Typeface.create("sans-serif", Typeface.NORMAL);
+        quitDialog = new QuitDialog(this,this);
         punkText.setTypeface(typeface);
         inputButton.setOnClickListener((v) -> {
             SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -112,6 +116,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+    }
+    private void setOnBackPressed() {
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                quitDialog.show();
             }
         });
     }

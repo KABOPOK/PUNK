@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -59,6 +60,7 @@ import ru.kabopok.punk_jv.activities.UserProfileActivity;
 import ru.kabopok.punk_jv.classes.ImageResizer;
 import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.classes.Product;
+import ru.kabopok.punk_jv.classes.QuitDialog;
 import ru.kabopok.punk_jv.classes.User;
 import ru.kabopok.punk_jv.current.Online;
 
@@ -67,6 +69,7 @@ public class ProfileFragment extends Fragment {
     ImageView userPhoto;
     TextView userGender;
     TextView userPassword;
+    QuitDialog quitDialog;
     TextView userNumber;
     TextView name;
     CircleImageView pick;
@@ -98,6 +101,7 @@ public class ProfileFragment extends Fragment {
         userNumber.setText(currentUser.getNumber());
 
         SharedPreferences sharedPreferences = this.getContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        quitDialog = new QuitDialog(getActivity(),getContext());
         loadingBar = new LoadingBar(this.getActivity());
         pick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +120,14 @@ public class ProfileFragment extends Fragment {
                 startActivity(inputIntent);
             }
         });
-        Glide.with(view.getContext()).load(Online.getCurrentUser().getPhotoUserUrl()).into(userPhoto);
+        if(currentUser.getPhotoUserUrl().equals("stesnashka")){
+            int drawableId = R.drawable.photo;  // Replace with your actual resource ID
+            Drawable drawable = getResources().getDrawable(drawableId);
+            userPhoto.setImageDrawable(drawable);
+        }
+        else {
+            Glide.with(view.getContext()).load(Online.getCurrentUser().getPhotoUserUrl()).into(userPhoto);
+        }
         setOnBackPressed();
         return view;
     }
@@ -208,7 +219,7 @@ public class ProfileFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Toast.makeText(getContext(), "permisson denied", Toast.LENGTH_SHORT);
+                quitDialog.show();
             }
         });
     }

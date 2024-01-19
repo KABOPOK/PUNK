@@ -7,6 +7,9 @@ import ru.kabopok.punk_jv.classes.User;
 
 public class Online {
     private static Product CurrentProduct;
+
+    public static boolean TurnOff = false;
+    public static int lineCount = 0;
     private static User CurrentUser;
 
     public static final String UserPhoneKey = "";

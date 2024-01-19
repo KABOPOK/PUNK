@@ -11,11 +11,13 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import me.relex.circleindicator.CircleIndicator;
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.classes.ViewPagerAdapter;
 import ru.kabopok.punk_jv.classes.Product;
@@ -29,6 +31,7 @@ public class ProductActivity extends AppCompatActivity {
     TextView priceOfProduct;
     TextView productInfo;
     Button toUserProfileButton;
+    CircleIndicator indicator;
     ImageView pickBack;
     Product currentProduct = Online.getCurrentProduct();
     @Override
@@ -40,8 +43,10 @@ public class ProductActivity extends AppCompatActivity {
         nameOfUser = findViewById(R.id.nameOfProduct_TextView);
         priceOfProduct = findViewById(R.id.priceOfProduct_TextView);
         productInfo = findViewById(R.id.infoOfProduct_TextView);
+        indicator = findViewById(R.id.indicator);
         toUserProfileButton = findViewById(R.id.toProfileUser_Button);
         pickBack = findViewById(R.id.pick_back);
+
         nameOfUser.setText(currentProduct.getProductName());
         ownerProductName.setText(currentProduct.getProductOwnerName());
         priceOfProduct.setText(currentProduct.getProductPrice());
@@ -59,10 +64,11 @@ public class ProductActivity extends AppCompatActivity {
             }
         });
         setOnBackPressed();
+        indicator.setViewPager(viewPager);
     }
 
     private void setAdapter(){
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,null,currentProduct.getImagesURLs(), this::zoomPicture);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,null,currentProduct.getImagesURLs(), this::zoomPicture, this::setImageCounter);
         viewPager.setAdapter(viewPagerAdapter);
     }
     private void zoomPicture(){
@@ -70,10 +76,12 @@ public class ProductActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.custom_dialog_zoom);
         ViewPager pager  = dialog.findViewById(R.id.custom_ViewPager_dialog);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,null,currentProduct.getImagesURLs(),null);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,null,currentProduct.getImagesURLs(),null, this::setImageCounter);
         pager.setAdapter(viewPagerAdapter);
 
-        Button closeDialog = dialog.findViewById(R.id.custom_button_dialog);
+        ImageView closeDialog = dialog.findViewById(R.id.custom_button_dialog);
+        CircleIndicator indicator = (CircleIndicator) dialog.findViewById(R.id.indicator);
+        indicator.setViewPager(pager);
         //Or this one instead:
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         //img.setImageURI(photo);
@@ -94,5 +102,8 @@ public class ProductActivity extends AppCompatActivity {
                 startActivity(backToProductHome);
             }
         });
+    }
+
+    void setImageCounter(int current, int amount){
     }
 }

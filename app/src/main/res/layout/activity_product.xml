@@ -18,6 +18,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <me.relex.circleindicator.CircleIndicator
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/images_ViewPager" />
+
     <ImageView
         android:id="@+id/pick_back"
         android:layout_width="38dp"
@@ -25,7 +33,6 @@
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/navigationViewUp" />
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/images_ViewPager"
         android:layout_width="294dp"
@@ -39,20 +46,20 @@
     <TextView
         android:id="@+id/nameOfProduct_TextView"
         android:layout_width="300dp"
+        android:layout_height="64dp"
+        android:background="@color/strangeBlack"
+        android:gravity="center"
         android:text="MULTIBAPKA"
         android:textColor="@color/strangeYellow"
         android:textColorHint="@color/white"
         android:textColorLink="@color/white"
         android:textSize="25sp"
-        android:gravity="center"
         android:textStyle="bold"
-        android:layout_height="64dp"
         app:layout_constraintBottom_toTopOf="@+id/infoOfProduct_TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/strangeBlack"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/images_ViewPager"
+        app:layout_constraintTop_toBottomOf="@+id/indicator"
         app:layout_constraintVertical_bias="0.085" />
 
     <TextView
@@ -112,7 +119,7 @@
         android:gravity="center"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="10dp"
+        android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"

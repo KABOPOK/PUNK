@@ -25,9 +25,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public ImageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
         View view = inflater.inflate(R.layout.custom_single_image, parent,false);
-
         return new ViewHolder(view);
     }
 

@@ -2,27 +2,26 @@ package ru.kabopok.punk_jv.fragments;
 
 import static ru.kabopok.punk_jv.fragments.ProfileFragment.RESULT_OK;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,20 +45,18 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
-import javax.xml.transform.Result;
-
+import me.relex.circleindicator.CircleIndicator;
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.activities.HomeActivity;
-import ru.kabopok.punk_jv.activities.InputActivity;
+import ru.kabopok.punk_jv.activities.RegistrationActivity;
 import ru.kabopok.punk_jv.classes.ImageResizer;
+import ru.kabopok.punk_jv.classes.LineLimitFilter;
+import ru.kabopok.punk_jv.classes.QuitDialog;
 import ru.kabopok.punk_jv.classes.ViewPagerAdapter;
 import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.classes.User;
@@ -70,12 +68,14 @@ public class PublishProductFragment extends Fragment {
     StorageReference storageReference;
     private EditText productTitle;
     private EditText productPrice;
-    private ImageView test;
+    TextView counterLines;
+    QuitDialog quitDialog;
     private EditText productInfo;
     private Button PushProduct;
     private StorageReference StoreRef;
     private Uri uriOfImg;
     private String imgUrl;
+    CircleIndicator indicator;
     private int counter;
     private User currentUser = Online.getCurrentUser();
     private ViewPager viewPager;
@@ -97,9 +97,35 @@ public class PublishProductFragment extends Fragment {
         PushProduct = (Button) view.findViewById(R.id.push_product_button);
         viewPager = view.findViewById(R.id.images_ViewPager);
         pick = view.findViewById(R.id.pick);
+        indicator = view.findViewById(R.id.indicator_0);
+        counterLines = view.findViewById(R.id.infoLinesCounter);
         binding = FragmentPublishProductBinding.inflate(getLayoutInflater());
-
+        quitDialog = new QuitDialog(getActivity(),getContext());
         loadingBar = new LoadingBar(this.getActivity());
+        productInfo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Online.lineCount = productInfo.getLineCount();
+                if(Online.lineCount > 7) {
+                    counterLines.setTextColor(Color.RED);
+                }
+                else{
+                    counterLines.setTextColor(Color.WHITE);
+                }
+                counterLines.setText(Online.lineCount + "/7");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        productInfo.setFilters(new InputFilter[]{new LineLimitFilter(8)});
         pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +140,7 @@ public class PublishProductFragment extends Fragment {
 
         });
         PushProduct.setOnClickListener(v -> {
+            Online.lineCount = 0;
             loadingBar.show();
             if(CorrectData()) {
                 sendToBase();
@@ -140,7 +167,7 @@ public class PublishProductFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Toast.makeText(getContext(), "permisson denied", Toast.LENGTH_SHORT);
+                quitDialog.show();
             }
         });
     }
@@ -176,12 +203,10 @@ public class PublishProductFragment extends Fragment {
                     }
                     uriArrayList.add(result.getData().getData());
                     setAdapter();
+                    indicator.setViewPager(viewPager);
                 }
             }
     );
-
-
-
 //    private void PickImages() {
 //        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 //        intent.setType("image/*");
@@ -339,7 +364,7 @@ public class PublishProductFragment extends Fragment {
         });
     }
     private void setAdapter(){
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayList,null, this::zoomPicture);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayList,null, this::zoomPicture, this::setImageCounter);
         viewPager.setAdapter(viewPagerAdapter);
     }
     private void zoomPicture(){
@@ -347,10 +372,12 @@ public class PublishProductFragment extends Fragment {
         dialog.setContentView(R.layout.custom_dialog_zoom);
         ViewPager pager  = dialog.findViewById(R.id.custom_ViewPager_dialog);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayList,null, null);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayList,null, null, this::setImageCounter);
         pager.setAdapter(viewPagerAdapter);
 
-        Button closeDialog = dialog.findViewById(R.id.custom_button_dialog);
+        ImageView closeDialog = dialog.findViewById(R.id.custom_button_dialog);
+        CircleIndicator bar = dialog.findViewById(R.id.indicator);
+        bar.setViewPager(pager);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -367,5 +394,7 @@ public class PublishProductFragment extends Fragment {
         return true;
     }
 
+    void setImageCounter(int current, int amount){
+    }
 
 }

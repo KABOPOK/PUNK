@@ -39,6 +39,7 @@ import ru.kabopok.punk_jv.classes.LoadingBar;
 import ru.kabopok.punk_jv.classes.Photo;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.ProductAdapter;
+import ru.kabopok.punk_jv.classes.QuitDialog;
 import ru.kabopok.punk_jv.classes.User;
 import ru.kabopok.punk_jv.current.Online;
 
@@ -60,6 +61,7 @@ public class HomeFragment extends Fragment {
     RecyclerView rvProducts;
     ImageView imageView;
     ProductAdapter productAdapter;
+    QuitDialog quitDialog;
     EditText searchView;
     List<Product> productList = new ArrayList<>();
 
@@ -74,6 +76,7 @@ public class HomeFragment extends Fragment {
         searchView = view.findViewById(R.id.searchView2);
         imageView = view.findViewById(R.id.circleImageView);
         searchView.clearFocus();
+        quitDialog = new QuitDialog(getActivity(),getContext());
         //searchView.setQueryHint(Html.fromHtml("<font color = #7A7A7A>" + "find" + "</font>"));
         searchView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -250,7 +253,7 @@ public class HomeFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Toast.makeText(getContext(), "permisson denied", Toast.LENGTH_SHORT);
+                quitDialog.show();
                 searchView.clearFocus();
             }
         });
