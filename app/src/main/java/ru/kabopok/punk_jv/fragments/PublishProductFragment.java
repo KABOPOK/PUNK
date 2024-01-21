@@ -102,6 +102,9 @@ public class PublishProductFragment extends Fragment {
         binding = FragmentPublishProductBinding.inflate(getLayoutInflater());
         quitDialog = new QuitDialog(getActivity(),getContext());
         loadingBar = new LoadingBar(this.getActivity());
+
+        productPrice.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+        productTitle.setFilters(new InputFilter[]{new InputFilter.LengthFilter(17)});
         productInfo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

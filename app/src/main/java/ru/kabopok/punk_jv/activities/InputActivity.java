@@ -67,14 +67,13 @@ public class InputActivity extends AppCompatActivity {
     }
 
     private void checkInBase(String number, String password) {
-
-        loadingBar.show();
-
-        if(number.equals("alice") && password.equals("29")){
+        if(number.equals("1") && password.equals("й")){
             Intent DeveloperIntent = new Intent(InputActivity.this, DeveloperActivity.class);
             startActivity(DeveloperIntent);
             return;
         }
+
+        loadingBar.show();
 
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -105,9 +104,7 @@ public class InputActivity extends AppCompatActivity {
                 }
                 else{
                     loadingBar.dismiss();
-                    Toast.makeText(InputActivity.this, "Ты кто такой?" + number, Toast.LENGTH_LONG).show();
-                    Intent regIntent = new Intent(InputActivity.this, RegistrationActivity.class);
-                    startActivity(regIntent);
+                    Toast.makeText(InputActivity.this, "Тебя нет в БАЗ(А)е", Toast.LENGTH_LONG).show();
                 }
             }
 

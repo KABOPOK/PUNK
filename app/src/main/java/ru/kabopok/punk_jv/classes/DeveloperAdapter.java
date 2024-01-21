@@ -2,6 +2,7 @@ package ru.kabopok.punk_jv.classes;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +39,13 @@ public class DeveloperAdapter extends RecyclerView.Adapter<DeveloperAdapter.User
     private User currentUser = Online.getCurrentUser();
     long counter =0;
     long productsAmount =0;
+    getDraw getDraw;
 
-    public DeveloperAdapter(List<User> userList, Context context, DeveloperAdapter.UserOnClickListener userOnClickListener) {
+    public DeveloperAdapter(List<User> userList, Context context, DeveloperAdapter.UserOnClickListener userOnClickListener, getDraw getDraw) {
         this.userList = userList;
         this.context = context;
         this.UserOnClickListener = userOnClickListener;
+        this.getDraw = getDraw;
     }
 
     @NonNull
@@ -67,7 +70,14 @@ public class DeveloperAdapter extends RecyclerView.Adapter<DeveloperAdapter.User
         holder.number.setText(number);
         holder.password.setText(password);
         holder.ID.setText(ID);
-        Glide.with(context).load(URL).into(holder.image);
+        if(URL.equals("stesnashka")){
+            int drawableId = R.drawable.photo;  // Replace with your actual resource ID
+            Drawable drawable = getDraw.getDrawable(drawableId);
+            holder.image.setImageDrawable(drawable);
+        }
+        else {
+            Glide.with(context).load(URL).into(holder.image);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,5 +173,8 @@ public class DeveloperAdapter extends RecyclerView.Adapter<DeveloperAdapter.User
     }
     public interface UserOnClickListener{
         void selectedUser(User user);
+    }
+    public interface getDraw{
+        Drawable getDrawable(int id);
     }
 }

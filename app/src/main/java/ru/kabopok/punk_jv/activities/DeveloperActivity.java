@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.SearchView;
 
@@ -63,7 +64,7 @@ public class DeveloperActivity extends AppCompatActivity {
     }
 
     private void prepareAdapter() {
-        developerAdapter = new DeveloperAdapter(userList,this,this::selectedUser);
+        developerAdapter = new DeveloperAdapter(userList,this,this::selectedUser, this::getDrawable_);
         userRecycle.setAdapter(developerAdapter);
     }
 
@@ -73,4 +74,7 @@ public class DeveloperActivity extends AppCompatActivity {
     }
 
     void selectedUser(User user){}
+    Drawable getDrawable_(int id){
+        return getResources().getDrawable(id);
+    }
 }

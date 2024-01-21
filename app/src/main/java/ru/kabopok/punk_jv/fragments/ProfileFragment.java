@@ -172,11 +172,11 @@ public class ProfileFragment extends Fragment {
                     uploadImgWithCompress(photoUserUri);
                 }
                 userPhoto.setImageURI(photoUserUri);
+                loadingBar.show();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 //Exception error = result.getError();
             }
         }
-        loadingBar.show();
     }
 
     private void replacePhoto(String imgUrl, String path) {

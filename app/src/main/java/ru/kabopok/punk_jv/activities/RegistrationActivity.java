@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -79,7 +80,9 @@ public class RegistrationActivity extends AppCompatActivity {
         checkBox = findViewById(R.id.checkRegistration_CheckBox);
         photoUser = findViewById(R.id.registrationUserPhoto_ImageView);
         quitDialog = new QuitDialog(this,this);
-
+        nameData.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+        numberData.setFilters(new InputFilter[]{new InputFilter.LengthFilter(13)});
+        genderData.setFilters(new InputFilter[]{new InputFilter.LengthFilter(36)});
         photoUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -90,6 +90,13 @@ public class HomeFragment extends Fragment {
                 imageView.setImageResource(R.drawable.ic_close);
                 if(query.equals("")){
                     imageView.setImageResource(R.drawable.ic_black_close);
+                    searchView.clearFocus();
+                    imageView.setImageResource(R.drawable.ic_black_close);
+                    View view = getView();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager)requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
                 }
             }
 
@@ -123,7 +130,7 @@ public class HomeFragment extends Fragment {
     private void showFilterList(String newText) {
         List<Product> filteredList = new ArrayList<>();
         for (Product product : productList) {
-            if (product.getProductName().toLowerCase().contains(newText)) {
+            if (product.getProductName().toLowerCase().contains(newText.toLowerCase())) {
                 filteredList.add(product);
             }
         }
