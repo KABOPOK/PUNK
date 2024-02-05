@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import ru.kabopok.punk_jv.R;
+import ru.kabopok.punk_jv.current.Online;
 import ru.kabopok.punk_jv.databinding.ActivityHomeBinding;
 import ru.kabopok.punk_jv.databinding.ActivityMainBinding;
 import ru.kabopok.punk_jv.fragments.FavouriteProductsFragment;
@@ -25,7 +26,12 @@ public class HomeActivity extends AppCompatActivity {
         replaceFragment(new HomeFragment());
         binding.navigationPanelBottomNavigationView.setBackground(null);
         binding.navigationPanelBottomNavigationView.setOnItemSelectedListener(item -> {
-            if(item.getItemId() == R.id.home){
+            Online.lineCount = 0;
+            if(Online.UserProduct){
+                replaceFragment(new UserProductsFragment());
+                Online.UserProduct = false;
+            }
+            else if(item.getItemId() == R.id.home){
                 replaceFragment(new HomeFragment());
             }
             else if(item.getItemId() == R.id.favourite_menu) {

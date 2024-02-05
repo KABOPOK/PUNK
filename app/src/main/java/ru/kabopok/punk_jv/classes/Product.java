@@ -13,7 +13,6 @@ public class Product {
     String productPrice;
     String productInfo;
     String productOwner;
-
     ArrayList<String> imagesURLs = new ArrayList<>();
     public Product(){
         this.photo = null;

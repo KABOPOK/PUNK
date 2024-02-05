@@ -8,4 +8,16 @@
         android:id="@+id/custom_image_ImageView"
         android:layout_height="match_parent"
         />
+
+    <ImageView
+        android:id="@+id/delete_product"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_above="@id/custom_image_ImageView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="-82dp"
+        android:src="@drawable/ic_close" />
 </RelativeLayout>

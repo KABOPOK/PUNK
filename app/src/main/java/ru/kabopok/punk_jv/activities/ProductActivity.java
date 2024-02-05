@@ -68,7 +68,7 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void setAdapter(){
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,null,currentProduct.getImagesURLs(), this::zoomPicture, this::setImageCounter);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,currentProduct.getImagesURLs(), this::zoomPicture, null, true);
         viewPager.setAdapter(viewPagerAdapter);
     }
     private void zoomPicture(){
@@ -76,7 +76,7 @@ public class ProductActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.custom_dialog_zoom);
         ViewPager pager  = dialog.findViewById(R.id.custom_ViewPager_dialog);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,null,currentProduct.getImagesURLs(),null, this::setImageCounter);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,currentProduct.getImagesURLs(),null, null, true);
         pager.setAdapter(viewPagerAdapter);
 
         ImageView closeDialog = dialog.findViewById(R.id.custom_button_dialog);
@@ -102,8 +102,5 @@ public class ProductActivity extends AppCompatActivity {
                 startActivity(backToProductHome);
             }
         });
-    }
-
-    void setImageCounter(int current, int amount){
     }
 }

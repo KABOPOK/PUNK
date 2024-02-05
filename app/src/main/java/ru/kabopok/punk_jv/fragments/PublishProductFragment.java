@@ -104,7 +104,7 @@ public class PublishProductFragment extends Fragment {
         loadingBar = new LoadingBar(this.getActivity());
 
         productPrice.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
-        productTitle.setFilters(new InputFilter[]{new InputFilter.LengthFilter(17)});
+        productTitle.setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
         productInfo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -143,10 +143,10 @@ public class PublishProductFragment extends Fragment {
 
         });
         PushProduct.setOnClickListener(v -> {
-            Online.lineCount = 0;
             loadingBar.show();
             if(CorrectData()) {
                 sendToBase();
+                Online.lineCount = 0;
                 uploadImgWithCompress();
             }else{
                 loadingBar.dismiss();
@@ -210,57 +210,6 @@ public class PublishProductFragment extends Fragment {
                 }
             }
     );
-//    private void PickImages() {
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//        intent.setType("image/*");
-//        startActivityForResult(Intent.createChooser(intent, "Select Picture"),PICK_IMAGE_CODE);
-//    }
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        if(REQUEST_PERMISSION_CODE == requestCode){
-//            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-//                PickImages();
-//            }
-//            else{
-//                Toast.makeText(this.getContext(), "permisson denied", Toast.LENGTH_SHORT);
-//            }
-//        }
-//    }
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == PICK_IMAGE_CODE && resultCode == Activity.RESULT_OK){
-//            ++joke;
-//            switch (joke){
-//                case 1:
-//                    pick.setText("ещё одну подгрузить");
-//                    break;
-//                case 2:
-//                    pick.setText("и ещё");
-//                    break;
-//                case 3:
-//                    pick.setText("ещё!!!");
-//                    break;
-//                case 4:
-//                    pick.setText("ну вот ещё одну");
-//                    break;
-//                case 5:
-//                    pick.setText("ну вот надо ещё");
-//                    break;
-//                case 6:
-//                    pick.setText("ну вот последнюю");
-//                    break;
-//                default:
-//                    if(joke<8) {
-//                        pick.setText("точно последнюю");
-//                    }
-//            }
-//            uriArrayList.add(data.getClipData().getItemAt(0).getUri());
-//            setAdapter();
-//        }
-//    }
     private void uploadImgWithCompress(){
         for(int i =0;  i < uriArrayList.size(); ++i) {
             uriOfImg = uriArrayList.get(i);
@@ -280,7 +229,6 @@ public class PublishProductFragment extends Fragment {
             ref.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    //Toast.makeText(this.getContext(), "Image Uploaded!!", Toast.LENGTH_SHORT).show();
                     Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
                     result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
@@ -367,7 +315,11 @@ public class PublishProductFragment extends Fragment {
         });
     }
     private void setAdapter(){
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayList,null, this::zoomPicture, this::setImageCounter);
+        ArrayList<String> uriArrayListToString = new ArrayList<>();
+        for(int i =0; i < uriArrayList.size(); ++i){
+            uriArrayListToString.add(uriArrayList.get(i).toString());
+        }
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayListToString, this::zoomPicture, this::deleteImage);
         viewPager.setAdapter(viewPagerAdapter);
     }
     private void zoomPicture(){
@@ -375,9 +327,12 @@ public class PublishProductFragment extends Fragment {
         dialog.setContentView(R.layout.custom_dialog_zoom);
         ViewPager pager  = dialog.findViewById(R.id.custom_ViewPager_dialog);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayList,null, null, this::setImageCounter);
+        ArrayList<String> uriArrayListToString = new ArrayList<>();
+        for(int i =0; i < uriArrayList.size(); ++i){
+            uriArrayListToString.add(uriArrayList.get(i).toString());
+        }
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getContext(),uriArrayListToString, null, this::deleteImage, true);
         pager.setAdapter(viewPagerAdapter);
-
         ImageView closeDialog = dialog.findViewById(R.id.custom_button_dialog);
         CircleIndicator bar = dialog.findViewById(R.id.indicator);
         bar.setViewPager(pager);
@@ -397,7 +352,11 @@ public class PublishProductFragment extends Fragment {
         return true;
     }
 
-    void setImageCounter(int current, int amount){
+    private void deleteImage(int current){
+        uriArrayList.remove(current);
+        indicator.setViewPager(viewPager);
+        setAdapter();
+        --joke;
     }
 
 }

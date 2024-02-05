@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
@@ -22,27 +23,31 @@ import ru.kabopok.punk_jv.R;
 public class ViewPagerAdapter extends PagerAdapter {
 
     Context context;
-    ArrayList<Uri> imagesUris;
-    ArrayList<String> imagesURLs;
+    ArrayList<String> imagesPaths;
     LayoutInflater layoutInflater;
     ItemClickListener itemClickListener;
-    ImageCounter imageCounter;
+    ImageDeletionListener imageDeletionListener;
+    boolean hideDeleteButton;
 
-    public ViewPagerAdapter(Context context, ArrayList<Uri> imagesUris, ArrayList<String> imagesURLs, ItemClickListener itemClickListener,ImageCounter imageCounter) {
+    public ViewPagerAdapter(Context context, ArrayList<String> imagesPaths, ItemClickListener itemClickListener,ImageDeletionListener imageDeletionListener) {
         this.context = context;
-        this.imagesUris = imagesUris;
         this.layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        this.imagesURLs = imagesURLs;
+        this.imagesPaths = imagesPaths;
         this.itemClickListener = itemClickListener;
-        this.imageCounter = imageCounter;
+        this.imageDeletionListener = imageDeletionListener;
+    }
+    public ViewPagerAdapter(Context context, ArrayList<String> imagesPaths, ItemClickListener itemClickListener,ImageDeletionListener imageDeletionListener, boolean hideDeleteButton) {
+        this.context = context;
+        this.layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        this.imagesPaths = imagesPaths;
+        this.itemClickListener = itemClickListener;
+        this.imageDeletionListener = imageDeletionListener;
+        this.hideDeleteButton = hideDeleteButton;
     }
 
     @Override
     public int getCount() {
-        if(imagesUris!=null) {
-            return imagesUris.size();
-        }
-        return  imagesURLs.size();
+        return  imagesPaths.size();
     }
 
     @NonNull
@@ -51,25 +56,22 @@ public class ViewPagerAdapter extends PagerAdapter {
         //TextView text;
         View view = layoutInflater.inflate(R.layout.custom_single_image,container, false);
         ImageView imageView = view.findViewById(R.id.custom_image_ImageView);
+        ImageView delete_product = view.findViewById(R.id.delete_product);
+        if(hideDeleteButton){
+            hideDeleteButton(delete_product);
+        }
        // text = view.findViewById(R.id.text);
-        if(imagesUris != null) {
-            Glide.with(context).load(imagesUris.get(position)).into(imageView);
-            //text.setText(String.valueOf(position+1) + "/" + String.valueOf(imagesUris.size()));
-            //imageCounter.setImageCounter(position,imagesUris.size());
-        }
-        else{
-            Glide.with(context).load(imagesURLs.get(position)).into(imageView);
-            //text.setText(String.valueOf(position+1) + "/" + String.valueOf(imagesURLs.size()));
-            //imageCounter.setImageCounter(position,imagesURLs.size());
-        }
+        Glide.with(context).load(imagesPaths.get(position)).into(imageView);
         Objects.requireNonNull(container).addView(view);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClickListener != null) {
-                    itemClickListener.ItemClick();
-                }
+        imageView.setOnClickListener(v -> {
+            if(itemClickListener != null) {
+                itemClickListener.ItemClick();
+            }
+        });
+        delete_product.setOnClickListener(v -> {
+            if(itemClickListener != null && !hideDeleteButton) {
+                imageDeletionListener.deleteImage(position);
             }
         });
         return view;
@@ -88,8 +90,11 @@ public class ViewPagerAdapter extends PagerAdapter {
     public interface ItemClickListener{
         void ItemClick();
     }
+    public void hideDeleteButton(ImageView delete_product){
+        delete_product.setImageResource(0);
+    }
 
-    public interface ImageCounter{
-        void setImageCounter(int current, int amount);
+    public interface ImageDeletionListener{
+         void deleteImage(int position);
     }
 }

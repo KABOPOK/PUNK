@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             punkText = findViewById(R.id.textView5);
         }
         Typeface typeface = Typeface.create("sans-serif", Typeface.NORMAL);
+
         quitDialog = new QuitDialog(this,this);
         punkText.setTypeface(typeface);
         inputButton.setOnClickListener((v) -> {
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     loadingBar.dismiss();
                     Toast.makeText(MainActivity.this, "Ты кто такой?" + number, Toast.LENGTH_LONG).show();
-                    Intent regIntent = new Intent(MainActivity.this, RegistrationActivity.class);
+                    Intent regIntent = new Intent(MainActivity.this, InputActivity.class);
                     startActivity(regIntent);
                 }
             }

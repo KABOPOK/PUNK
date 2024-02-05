@@ -2,6 +2,7 @@ package ru.kabopok.punk_jv.classes;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 import ru.kabopok.punk_jv.R;
+import ru.kabopok.punk_jv.activities.RedactProductActivity;
 import ru.kabopok.punk_jv.current.Online;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductAdapterVh>{
@@ -154,6 +156,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
                     notifyDataSetChanged();
                 }
             });
+            holder.editProduct.setOnClickListener(v -> {
+                Online.CurrentRedactProduct = product;
+                Intent redactProduct = new Intent(context, RedactProductActivity.class);
+                context.startActivity(redactProduct);
+            });
         }
 
     }
@@ -212,6 +219,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
     public static class ProductAdapterVh extends RecyclerView.ViewHolder {
         private ImageView row_image;
         private ImageView trashCase;
+        private ImageView editProduct;
         private TextView row_name;
         private TextView row_user_name;
         private TextView row_info;
@@ -222,6 +230,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
             row_image = itemView.findViewById(R.id.row_image_ImageView);
             if(myProductsLayout) {
                 trashCase = itemView.findViewById(R.id.trashCase);
+                editProduct = itemView.findViewById(R.id.editProduct);
             }
             else{
                 heartButton = itemView.findViewById(R.id.heartOnProduct_SparkButton);
