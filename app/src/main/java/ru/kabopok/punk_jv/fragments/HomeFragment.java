@@ -171,9 +171,11 @@ public class HomeFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!AdapterPrepared) {
                     for (DataSnapshot postSnapshot : dataSnapshot.child("Products").getChildren()) {
+                        Product product = postSnapshot.getValue(Product.class);
+                        if(product.getBooked()){continue;}
                         ArrayList<String> photos = new ArrayList<>();
                         if(!postSnapshot.child("images").exists()){
-                            Product product = postSnapshot.getValue(Product.class);
+                            //Product product = postSnapshot.getValue(Product.class);
                             //deleteInvalidProduct(product);
                             continue;
                         }
@@ -181,7 +183,6 @@ public class HomeFragment extends Fragment {
                             Photo photo = postSnapshotPhoto.getValue(Photo.class);
                             photos.add(photo.getURL());
                         }
-                        Product product = postSnapshot.getValue(Product.class);
                         product.setImagesURLs(photos);
                         productList.add(product);
                     }

@@ -2,6 +2,7 @@ package ru.kabopok.punk_jv.classes;
 
 import static androidx.core.app.ActivityCompat.finishAffinity;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,8 +13,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 
 import ru.kabopok.punk_jv.R;
 import ru.kabopok.punk_jv.activities.MainActivity;
@@ -25,6 +28,7 @@ public class QuitDialog {
     Dialog dialog;
     Button yes;
     Button no;
+    int counter=0;
 
     public void show(){
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -45,9 +49,22 @@ public class QuitDialog {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Online.TurnOff = true;
-                finishAffinity(activity);
-                dismiss();
+                switch (counter){
+                    case 0:
+                        yes.animate().x(450).start();
+                        Toast.makeText(activity,"Уверен??",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        yes.animate().x(150).start();
+                        yes.animate().y(-50).start();
+                        Toast.makeText(activity,"Ну прям точно уверен?",Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        Online.TurnOff = true;
+                        finishAffinity(activity);
+                        dismiss();
+                }
+                ++counter;
             }
         });
         no.setOnClickListener(new View.OnClickListener() {

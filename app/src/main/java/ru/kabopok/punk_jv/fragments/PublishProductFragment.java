@@ -287,6 +287,7 @@ public class PublishProductFragment extends Fragment {
                     userHashMap.put("productPrice",productPrice.getText().toString());
                     userHashMap.put("productInfo",productInfo.getText().toString());
                     userHashMap.put("productOwner",currentUser.getNumber());
+                    userHashMap.put("booked",false);
                     rootRef.child("Products").child(String.valueOf(uniqueKey)).updateChildren(userHashMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

@@ -213,6 +213,7 @@ public class PublishProductActivity extends AppCompatActivity {
                     userHashMap.put("productInfo",productInfo);
                     userHashMap.put("URL",URL);
                     userHashMap.put("productOwner",Online.getCurrentUser().getNumber());
+                    userHashMap.put("Booked",false);
                     rootRef.child("Products").child(String.valueOf(uniqueKey)).updateChildren(userHashMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

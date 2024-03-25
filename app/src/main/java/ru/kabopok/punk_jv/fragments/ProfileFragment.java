@@ -53,7 +53,6 @@ import ru.kabopok.punk_jv.activities.InputActivity;
 import ru.kabopok.punk_jv.activities.MainActivity;
 import ru.kabopok.punk_jv.activities.ProductActivity;
 import ru.kabopok.punk_jv.activities.ProfileActivity;
-import ru.kabopok.punk_jv.activities.PublishProductActivity;
 import ru.kabopok.punk_jv.activities.RegistrationActivity;
 import ru.kabopok.punk_jv.activities.UserProductsActivity;
 import ru.kabopok.punk_jv.activities.UserProfileActivity;

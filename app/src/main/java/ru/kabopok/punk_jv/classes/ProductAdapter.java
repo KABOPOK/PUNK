@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ import com.varunest.sparkbutton.SparkButton;
 import com.varunest.sparkbutton.SparkEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,7 +64,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
     }
 
     public ProductAdapter(List<Product> productList, Context context, ProductOnClickListener productOnClickListener,
-    ActivateHeartListener activateHeartListener, DeactivateHeartListener deactivateHeartListener){
+                          ActivateHeartListener activateHeartListener, DeactivateHeartListener deactivateHeartListener){
         this.productList = productList;
         this.context = context;
         this.productOnClickListener  = productOnClickListener;
@@ -115,7 +117,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         holder.row_name.setText(product.getProductName());
         holder.row_price.setText(product.getProductPrice());
         holder.row_info.setText(product.getProductInfo());
-        holder.row_user_name.setText(product.getProductOwnerName());
         Glide.with(context).load(product.getOnePhoto()).into(holder.row_image);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +125,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
             }
         });
         if(!myProductsLayout) {
+            holder.row_user_name.setText(product.getProductOwnerName());
             holder.heartButton.setChecked(false);
             setSparkButtonCondition(holder.heartButton, product.getProductKey());
             holder.heartButton.setEventListener(new SparkEventListener() {
@@ -156,6 +158,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
                     notifyDataSetChanged();
                 }
             });
+            if(product.getBooked()){
+                holder.booking.setText("выставить на продажу");
+            }
+            else{
+                holder.booking.setText("убрать с продажи");
+            }
+            holder.booking.setOnClickListener(v -> {
+                if(!product.getBooked()){
+                    holder.booking.setText("выставить на продажу");
+                }
+                else{
+                    holder.booking.setText("убрать с продажи");
+                }
+                bookingProduct(productList.get(position));
+            });
             holder.editProduct.setOnClickListener(v -> {
                 Online.CurrentRedactProduct = product;
                 Intent redactProduct = new Intent(context, RedactProductActivity.class);
@@ -163,6 +180,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
             });
         }
 
+    }
+
+    private void bookingProduct(Product product){
+        final DatabaseReference rootRef;
+        HashMap<String, Object> userHashMap= new HashMap<>();
+        boolean bookedCondition = !product.getBooked();
+        product.setBooked(bookedCondition);
+        userHashMap.put("booked", bookedCondition);
+        rootRef = FirebaseDatabase.getInstance().getReference("Products").child(product.getProductKey());
+        rootRef.updateChildren(userHashMap);
     }
 
     private void deleteProduct(Product product) {
@@ -198,10 +225,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
         rootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-               if(dataSnapshot.child("Users").child(currentUser.getNumber()).child(
-                       "FavouriteProducts").child(key).exists()){
-                   heartButton.setChecked(true);
-               }
+                if(dataSnapshot.child("Users").child(currentUser.getNumber()).child(
+                        "FavouriteProducts").child(key).exists()){
+                    heartButton.setChecked(true);
+                }
             }
 
             @Override
@@ -218,8 +245,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
 
     public static class ProductAdapterVh extends RecyclerView.ViewHolder {
         private ImageView row_image;
+
         private ImageView trashCase;
         private ImageView editProduct;
+        private Button booking;
         private TextView row_name;
         private TextView row_user_name;
         private TextView row_info;
@@ -231,6 +260,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductA
             if(myProductsLayout) {
                 trashCase = itemView.findViewById(R.id.trashCase);
                 editProduct = itemView.findViewById(R.id.editProduct);
+                booking = itemView.findViewById(R.id.booking);
             }
             else{
                 heartButton = itemView.findViewById(R.id.heartOnProduct_SparkButton);

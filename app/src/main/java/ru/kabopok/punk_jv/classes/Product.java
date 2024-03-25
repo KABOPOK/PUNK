@@ -13,6 +13,7 @@ public class Product {
     String productPrice;
     String productInfo;
     String productOwner;
+    Boolean booked;
     ArrayList<String> imagesURLs = new ArrayList<>();
     public Product(){
         this.photo = null;
@@ -22,9 +23,11 @@ public class Product {
         this.productPrice = null;
         this.productInfo = null;
         this.productOwner = null;
+        this.booked = null;
     }
 
-    public Product(String productKey, String productOwnerName, String URL, String productName, String productPrice, String productInfo, String productOwner, Photo photo) {
+    public Product(String productKey, String productOwnerName, String URL, String productName, String productPrice, String productInfo, String productOwner, Photo photo, Boolean booked) {
+        this.booked=booked;
         this.productKey = productKey;
         this.productOwnerName = productOwnerName;
         this.photo = photo;
@@ -33,6 +36,15 @@ public class Product {
         this.productInfo = productInfo;
         this.productOwner = productOwner;
     }
+
+    public Boolean getBooked() {
+        return booked;
+    }
+
+    public void setBooked(Boolean booked) {
+        this.booked = booked;
+    }
+
     public void pushImagesPath(String X){
         pathImages.add(X);
     }
