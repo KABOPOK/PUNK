@@ -157,10 +157,11 @@
 
 
                 <Button
+                    android:id="@+id/make_message"
                     android:layout_width="wrap_content"
                     android:textColor="#4DC2D1"
                     android:text="Пару ласковых разрабу"
-                    android:backgroundTint="#4A4515"
+                    android:backgroundTint="#490E53"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

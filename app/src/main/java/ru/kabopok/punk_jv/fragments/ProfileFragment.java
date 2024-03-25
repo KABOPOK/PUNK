@@ -58,6 +58,7 @@ import ru.kabopok.punk_jv.activities.UserProductsActivity;
 import ru.kabopok.punk_jv.activities.UserProfileActivity;
 import ru.kabopok.punk_jv.classes.ImageResizer;
 import ru.kabopok.punk_jv.classes.LoadingBar;
+import ru.kabopok.punk_jv.classes.MakeMassageDialog;
 import ru.kabopok.punk_jv.classes.Product;
 import ru.kabopok.punk_jv.classes.QuitDialog;
 import ru.kabopok.punk_jv.classes.User;
@@ -69,6 +70,8 @@ public class ProfileFragment extends Fragment {
     TextView userGender;
     TextView userPassword;
     QuitDialog quitDialog;
+    Button makeMessage;
+    MakeMassageDialog massageDialog;
     TextView userNumber;
     TextView name;
     CircleImageView pick;
@@ -93,6 +96,7 @@ public class ProfileFragment extends Fragment {
         userNumber = view.findViewById(R.id.userProfileNumber_TextView);
         pick = view.findViewById(R.id.edit_profile_pick);
         log_out = view.findViewById(R.id.log_out_profile);
+        makeMessage = view.findViewById(R.id.make_message);
 
         name.setText(currentUser.getName());
         userGender.setText(currentUser.getGender());
@@ -101,7 +105,12 @@ public class ProfileFragment extends Fragment {
 
         SharedPreferences sharedPreferences = this.getContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         quitDialog = new QuitDialog(getActivity(),getContext());
+        massageDialog = new MakeMassageDialog(getActivity(),getContext());
         loadingBar = new LoadingBar(this.getActivity());
+
+        makeMessage.setOnClickListener(v -> {
+            massageDialog.show();
+        });
         pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
