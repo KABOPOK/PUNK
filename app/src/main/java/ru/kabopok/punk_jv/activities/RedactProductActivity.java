@@ -202,20 +202,29 @@ public class RedactProductActivity extends AppCompatActivity {
                     final StorageReference storeRef = FirebaseStorage.getInstance().getReference();
                     for (DataSnapshot snapshotPhotoList : snapshot.getChildren()) {
                         Photo photo = snapshotPhotoList.getValue(Photo.class);
-                        if (removedUrls.size() != 0 && photo.getURL() == removedUrls.get(0)) {
-                            removedUrls.remove(0);
-                            storeRef.child("images/").child(photo.getCloudPath()).delete();
-                        } else {
+                        if (removedUrls.size() != 0) {
+                            boolean equal = true;
+                            String url1 = photo.getURL();
+                            String url2 = removedUrls.get(0);
+                            if(url1.length() == url2.length()) {
+                                for (int i = 0; i < photo.getURL().length(); ++i) {
+                                    if (url1.charAt(i) != url2.charAt(i)) {
+                                        equal = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (equal) {
+                                removedUrls.remove(0);
+                                storeRef.child("images/").child(photo.getCloudPath()).delete();
+                            }
+                        }
+                        else {
                             DataPhotoAfterDelete.add(photo);
                         }
                     }
-                reLoadRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        ReLoadProduct();
-                        uploadImgWithCompress();
-                    }
-                });
+                reLoadRef.removeValue();
+                ReLoadProduct();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -234,6 +243,7 @@ public class RedactProductActivity extends AppCompatActivity {
         userHashMap.put("productPrice",productPrice.getText().toString());
         userHashMap.put("productInfo",productInfo.getText().toString());
         userHashMap.put("productOwner",Online.CurrentRedactProduct.getProductName());
+        userHashMap.put("booked",false);
         reLoadRef.child("Products").child(Online.CurrentRedactProduct.getProductKey()).updateChildren(userHashMap);
 
         for(int i =0; i < DataPhotoAfterDelete.size(); ++i) {
@@ -242,6 +252,15 @@ public class RedactProductActivity extends AppCompatActivity {
             photoHashMap.put("cloudPath", DataPhotoAfterDelete.get(i).getCloudPath());
             photoHashMap.put("URL", DataPhotoAfterDelete.get(i).getURL());
             reLoadRef.child("Products").child(Online.CurrentRedactProduct.getProductKey()).child(currentPath).updateChildren(photoHashMap);
+        }
+        if(uriArrayList.size() == 0){
+            loadingBar.dismiss();
+            Online.UserProduct = true;
+            Intent backToMain  = new Intent(RedactProductActivity.this, HomeActivity.class);
+            startActivity(backToMain);
+        }
+        else{
+            uploadImgWithCompress();
         }
     }
     private void uploadImgWithCompress(){
@@ -281,12 +300,6 @@ public class RedactProductActivity extends AppCompatActivity {
                     });
                 }
             });
-        }
-        if(uriArrayList.size() == 0){
-            loadingBar.dismiss();
-            Online.UserProduct = true;
-            Intent backToMain  = new Intent(RedactProductActivity.this, HomeActivity.class);
-            startActivity(backToMain);
         }
     }
     private void addPhoto(String imgUrl, String path) {

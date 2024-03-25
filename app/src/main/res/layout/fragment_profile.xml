@@ -154,6 +154,18 @@
                     app:civ_circle_background_color="@color/strangeLowBlack"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:textColor="#4DC2D1"
+                    android:text="Пару ласковых разрабу"
+                    android:backgroundTint="#4A4515"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userProfileGender_TextView" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
