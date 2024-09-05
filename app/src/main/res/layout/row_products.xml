@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="286dp"
+    android:background="#1E1E1E"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="245dp"
+        android:layout_margin="15dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="9dp"
+        app:cardCornerRadius="18dp"
+        android:background="@color/strangeLowBlack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#292929">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/row_image_ImageView"
+                android:layout_width="132dp"
+                android:layout_height="163dp"
+                android:layout_marginStart="16dp"
+                android:adjustViewBounds="true"
+                android:background="@color/strangeLowBlack"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/row_productName_TextView"
+                app:shapeAppearanceOverlay="@style/ImageStyle" />
+
+            <TextView
+                android:id="@+id/row_productName_TextView"
+                android:layout_width="250dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/strangeLowBlack"
+                android:gravity="left"
+                android:text="MULTIBAPKA"
+                android:textColor="@color/strangeYellow"
+                android:textColorHint="@color/white"
+                android:textColorLink="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:civ_border_color="@color/strangeYellow"
+
+                app:civ_border_width="3dp"
+                app:layout_constraintEnd_toStartOf="@+id/heartOnProduct_SparkButton"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="90dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="19dp"
+                android:background="@color/strangeLowBlack"
+                android:gravity="center"
+                android:text="владелец"
+                android:textColor="@color/strangeYellow"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/row_image_ImageView"
+                app:layout_constraintTop_toBottomOf="@+id/row_productName_TextView" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="90dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/strangeLowBlack"
+                android:gravity="center"
+                android:text="стоимость"
+                android:textColor="@color/strangeYellow"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/row_image_ImageView"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="90dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/strangeLowBlack"
+                android:gravity="center"
+                android:text="проблемки"
+                android:textColor="@color/strangeYellow"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@+id/row_image_ImageView"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/row_userName_TextView"
+                android:layout_width="90dp"
+                android:layout_height="25dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="18dp"
+                android:background="@color/strangeLowBlack"
+                android:gravity="center"
+                android:hint="UserName"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.263"
+                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/heartOnProduct_SparkButton" />
+
+            <TextView
+                android:id="@+id/row_productPrice_TextView"
+                android:layout_width="90dp"
+                android:layout_height="25dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@color/strangeLowBlack"
+                android:gravity="center"
+                android:text="price"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.263"
+                app:layout_constraintStart_toEndOf="@+id/textView"
+                app:layout_constraintTop_toBottomOf="@+id/row_userName_TextView" />
+
+            <TextView
+                android:id="@+id/row_productInfo_TextView"
+                android:layout_width="170dp"
+                android:layout_height="49dp"
+                android:background="@color/strangeLowBlack"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.562"
+                app:layout_constraintStart_toEndOf="@+id/row_image_ImageView"
+                app:layout_constraintTop_toBottomOf="@+id/textView8"
+                app:layout_constraintVertical_bias="0.448" />
+
+            <com.varunest.sparkbutton.SparkButton
+                android:id="@+id/heartOnProduct_SparkButton"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_vector_thash_case"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:sparkbutton_activeImage="@drawable/ic_heart"
+                app:sparkbutton_iconSize="40dp"
+                app:sparkbutton_inActiveImage="@drawable/ic_heart_border"
+                app:sparkbutton_primaryColor="@color/strangeYellow"
+                app:sparkbutton_secondaryColor="@color/red" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

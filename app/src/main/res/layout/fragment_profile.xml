@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/strangeBlack"
+    tools:context=".fragments.ProfileFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="322dp"
+            android:layout_height="555dp"
+
+            app:cardCornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.278">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:background="@color/strangeLowBlack"
+                android:layout_height="match_parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userMainProfilePhoto_ImageView"
+                    android:layout_width="281dp"
+                    android:layout_height="254dp"
+                    android:layout_marginTop="28dp"
+                    android:background="@color/strangeLowBlack"
+                    android:src="@drawable/vector_ic_profile"
+                    app:civ_border_color="@color/strangeYellow"
+                    app:civ_border_width="3dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.609"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@drawable/ic_photo" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/edit_profile_pick"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="28dp"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/ic_edit"
+                    app:civ_border_color="@color/strangeYellow"
+                    app:civ_border_width="3dp"
+                    app:civ_circle_background_color="@color/strangeLowBlack"
+                    app:layout_constraintBottom_toBottomOf="@+id/userMainProfilePhoto_ImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/userMainProfilePhoto_ImageView" />
+
+                <TextView
+                    android:id="@+id/profileUsername_TextView"
+                    android:layout_width="250dp"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="292dp"
+                    android:background="@color/strangeLowBlack"
+                    android:gravity="center"
+                    android:text="MULTIBAPKA"
+                    android:textColor="@color/strangeYellow"
+                    android:textColorHint="@color/white"
+                    android:textColorLink="@color/white"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="123dp"
+                    android:layout_height="34dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/strangeLowBlack"
+                    android:text="номер"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profileUsername_TextView" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="123dp"
+                    android:layout_height="34dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/strangeLowBlack"
+                    android:text="пароль"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="123dp"
+                    android:layout_height="34dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/strangeLowBlack"
+                    android:text="Telegramm"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    app:layout_constraintVertical_bias="0.074" />
+
+                <TextView
+                    android:id="@+id/userProfileNumber_TextView"
+                    android:layout_width="148dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profileUsername_TextView" />
+
+                <TextView
+                    android:id="@+id/userProfilePassword_TextView"
+                    android:layout_width="148dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userProfileNumber_TextView" />
+
+                <TextView
+                    android:id="@+id/userProfileGender_TextView"
+                    android:layout_width="148dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userProfilePassword_TextView" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/log_out_profile"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginEnd="9dp"
+                    android:src="@drawable/log_out_vector"
+                    app:civ_circle_background_color="@color/strangeLowBlack"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <Button
+                    android:id="@+id/make_message"
+                    android:layout_width="wrap_content"
+                    android:textColor="#4DC2D1"
+                    android:text="Пару ласковых разрабу"
+                    android:backgroundTint="#490E53"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userProfileGender_TextView" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

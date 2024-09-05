@@ -1,0 +1,48 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.PUNK_JV" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="background">@color/strangeLowBlack</item>
+        <item name="colorPrimary">@color/strangeBlack</item>
+        <item name="colorPrimaryDark">@color/strangeBlack</item>
+        <item name="colorAccent">@color/strangeBlack</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@color/strangeBlack</item>
+    </style>
+    <style name="ItemStyle">
+        <item name="android:background">@color/strangeLowBlack</item>
+        <item name="sparkbutton_primaryColor">@color/strangeLowBlack</item>
+        <item name="colorPrimary">@color/strangeLowBlack</item>
+        <item name="colorPrimaryDark">@color/strangeLowBlack</item>
+        <item name="colorAccent">@color/strangeLowBlack</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@color/strangeLowBlack</item>
+    </style>
+    <style name="BottomNavigation">
+        <item name="android:background">@color/black</item>
+        <item name="backgroundTint">@color/black</item>
+        <item name="elevation">@dimen/m3_sys_elevation_level2</item>
+        <item name="itemTextAppearanceInactive">?attr/textAppearanceCaption</item>
+        <item name="itemTextAppearanceActive">?attr/textAppearanceCaption</item>
+        <item name="itemRippleColor">@color/black</item>
+        <item name="itemIconTint">@color/black</item>
+        <item name="itemTextColor">@color/black</item>
+        <item name="itemPaddingTop">@dimen/m3_bottom_nav_item_padding_top</item>
+        <item name="itemPaddingBottom">@dimen/m3_bottom_nav_item_padding_bottom</item>
+        <item name="android:minHeight">@dimen/m3_bottom_nav_min_height</item>
+        <item name="enforceTextAppearance">true</item>
+        <item name="enforceMaterialTheme">true</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+    <style name="ImageStyle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+        <item name="color">@color/strangeBlack</item>
+    </style>
+    <style name="Theme.PUNK_JV" parent="Base.Theme.PUNK_JV" />
+    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="icon">@drawable/ic_search</item> // Custom search icon
+        <item name="android:textColor">@color/strangeYellow</item> // Custom search icon
+        <item name="android:textColorHint">@color/strangeLowBlack</item> // Custom search icon
+        <item name="android:hint">"найти то, что искал"</item> // Custom search icon
+    </style>
+</resources>

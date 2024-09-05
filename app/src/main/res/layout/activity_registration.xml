@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/strangeBlack"
+    android:layout_height="match_parent">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/registrationUserPhoto_ImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="222dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="68dp"
+        android:background="@color/strangeBlack"
+        android:src="@drawable/vector_ic_profile"
+        app:civ_border_color="@color/strangeYellow"
+        app:civ_border_width="3dp"
+        tools:srcCompat="@drawable/ic_photo" />
+
+    <EditText
+        android:id="@+id/create_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="305dp"
+        android:textColor="@color/white"
+        android:layout_marginRight="25dp"
+        android:background="@color/strangeLowBlack"
+        android:textColorHint="@color/hintColor"
+        android:hint="Имя"
+        android:textCursorDrawable="@drawable/custon_cursor"
+        android:inputType="textPersonName"
+        android:padding="15dp" />
+
+    <EditText
+        android:id="@+id/create_gender"
+        android:layout_width="match_parent"
+        android:textCursorDrawable="@drawable/custon_cursor"
+        android:layout_height="wrap_content"
+        android:background="@color/strangeLowBlack"
+        android:layout_marginLeft="25dp"
+        android:textColorHint="@color/hintColor"
+        android:layout_marginTop="500dp"
+        android:textColor="@color/white"
+        android:layout_marginRight="25dp"
+        android:hint="Telegramm @ID"
+        android:inputType="textPersonName"
+        android:padding="15dp" />
+
+    <EditText
+        android:id="@+id/create_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textCursorDrawable="@drawable/custon_cursor"
+        android:background="@color/strangeLowBlack"
+        android:textColorHint="@color/hintColor"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="435dp"
+        android:layout_marginRight="25dp"
+        android:textColor="@color/white"
+        android:hint="Номер"
+        android:inputType="phone"
+        android:padding="15dp" />
+
+    <EditText
+        android:id="@+id/create_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="370dp"
+        android:textCursorDrawable="@drawable/custon_cursor"
+        android:textColor="@color/white"
+        android:background="@color/strangeLowBlack"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="95dp"
+        android:hint="Пapoль"
+        android:textColorHint="@color/hintColor"
+        android:inputType="textPersonName"
+        android:padding="15dp" />
+
+    <CheckBox
+        android:id="@+id/checkRegistration_CheckBox"
+        style="@style/Material.Drawable.CheckBox"
+        android:layout_width="299dp"
+        android:layout_height="37dp"
+        android:layout_above="@+id/create_new_user_button"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="151dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="10dp"
+        android:text="Погожев всегда прав"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/create_new_user_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="69dp"
+        android:backgroundTint="@color/strangeLowBlack"
+        android:onClick="displayClick"
+        android:padding="20dp"
+        android:text="зарегатъся"
+        android:textColor="@color/white"
+        android:textSize="30dp" />
+</RelativeLayout>

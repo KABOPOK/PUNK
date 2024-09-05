@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/strangeBlack"
+    tools:context=".activities.InputActivity">
+
+    <EditText
+        android:id="@+id/input_text_number"
+        android:layout_width="337dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="256dp"
+        android:background="@color/strangeLowBlack"
+        android:gravity="center"
+        android:hint="номер"
+        android:textCursorDrawable="@drawable/custon_cursor"
+        android:inputType="phone"
+        android:textColor="@color/white"
+        android:textColorHint="@color/hintColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/input_text_password"
+        android:layout_width="337dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="28dp"
+        android:textCursorDrawable="@drawable/custon_cursor"
+        android:background="@color/strangeLowBlack"
+        android:gravity="center"
+        android:hint="пароль"
+        android:inputType="textPersonName"
+        android:padding="15dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/hintColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_text_number" />
+
+    <CheckBox
+        android:id="@+id/rememberUser_CheckBox"
+        style="@style/Material.Drawable.CheckBox"
+        android:layout_width="295dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/input_text_password"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:text="Меня легко потерять и невозможно забыть"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.318"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_text_password" />
+
+    <Button
+        android:id="@+id/in_button"
+        android:layout_width="365dp"
+        android:layout_height="88dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="92dp"
+        android:backgroundTint="@color/strangeLowBlack"
+        android:onClick="displayClick"
+        android:padding="20dp"
+        android:text="войти"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rememberUser_CheckBox" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

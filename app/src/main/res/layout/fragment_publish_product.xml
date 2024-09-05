@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/strangeBlack"
+    tools:context=".fragments.PublishProductFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/strangeBlack">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/images_ViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="291dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/image_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/strangeYellow"
+            android:layout_marginStart="95dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/pick"
+            app:layout_constraintTop_toBottomOf="@+id/images_ViewPager" />
+        <me.relex.circleindicator.CircleIndicator
+            android:id="@+id/indicator_0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/images_ViewPager" />
+
+        <Button
+            android:id="@+id/pick"
+            android:layout_width="184dp"
+            android:layout_height="42dp"
+            android:backgroundTint="@color/strangeLowBlack"
+            android:text="выбрать фоточки"
+            android:textColor="@color/strangeYellow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/indicator_0" />
+
+        <EditText
+            android:id="@+id/product_title"
+            android:layout_width="303dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="76dp"
+            android:background="@color/strangeLowBlack"
+            android:gravity="center"
+            android:hint="название"
+            android:textCursorDrawable="@drawable/custon_cursor"
+            android:inputType="textPersonName"
+            android:textColor="@color/white"
+            android:textColorHint="@color/hintColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.518"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/images_ViewPager" />
+
+        <EditText
+            android:id="@+id/product_price"
+            android:background="@color/strangeLowBlack"
+            android:layout_width="303dp"
+            android:layout_height="40dp"
+            android:hint="цена"
+            android:textCursorDrawable="@drawable/custon_cursor"
+            android:inputType="textPersonName"
+            android:textColorHint="@color/hintColor"
+            android:gravity="center"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_title" />
+
+        <TextView
+            android:id="@+id/infoLinesCounter"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/product_info"
+            app:layout_constraintEnd_toEndOf="@+id/indicator_0"
+            app:layout_constraintStart_toEndOf="@+id/product_info" />
+
+        <EditText
+            android:id="@+id/product_info"
+            android:background="@color/strangeLowBlack"
+            android:layout_width="303dp"
+            android:layout_height="120dp"
+            android:hint="описание"
+            android:gravity="center"
+            android:maxLines="7"
+            android:textColor="@color/white"
+            android:inputType="textMultiLine"
+            android:textCursorDrawable="@drawable/custon_cursor"
+            android:layout_marginTop="15dp"
+            android:textColorHint="@color/hintColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_price" />
+
+        <Button
+            android:id="@+id/push_product_button"
+            android:layout_width="356dp"
+            android:layout_height="74dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/strangeLowBlack"
+            android:text="Пытаться продать"
+            android:textColor="@color/strangeYellow"
+            android:textSize="29sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_info"
+            app:layout_constraintVertical_bias="0.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
